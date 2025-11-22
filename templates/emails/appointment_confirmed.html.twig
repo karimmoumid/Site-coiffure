@@ -25,21 +25,26 @@
                 <h2 style="margin: 0;">✅ Votre rendez-vous est confirmé !</h2>
             </div>
             
-            <h2>Bonjour {{ appointment.clientName }},</h2>
+            <h2>Bonjour {{ appointment.name }},</h2>
             
             <p>Excellente nouvelle ! Votre rendez-vous au <strong class="highlight">Salon Luxe</strong> a été confirmé.</p>
             
             <div class="info-box">
                 <h3 style="color: #FFD700; margin-top: 0;">📅 Détails de votre rendez-vous</h3>
-                <p><strong>Service :</strong> {{ appointment.service.name }}</p>
-                <p><strong>Date :</strong> {{ appointment.appointmentDate|date('l d F Y', 'fr') }}</p>
-                <p><strong>Heure :</strong> {{ appointment.appointmentTime|date('H:i') }}</p>
-                <p><strong>Durée estimée :</strong> {{ appointment.service.duration }} minutes</p>
-                <p><strong>Prix :</strong> {{ appointment.service.price }} €</p>
-                {% if appointment.notes %}
-                <p><strong>Vos notes :</strong> {{ appointment.notes }}</p>
+                 {% for service in appointment.services %}
+                <p><strong>Service :</strong> {{ service.name }}</p>
+                <p><strong>Catégorie :</strong> {{ service.serviceCategory ? service.serviceCategory.name : 'N/A' }}</p>
+                <p><strong>Durée estimée :</strong> {{ service.getTime() }} minutes</p>
+                <p><strong>Prix :</strong> {{ service.getPrice() }} €</p>
+                <hr>
+                {% endfor %}
+                <p><strong>Date :</strong> {{ appointment.dateHour|date('l d F Y', 'fr') }}</p>
+                <p><strong>Heure :</strong> {{ appointment.dateHour|date('H:i') }}</p>
+                {% if appointment.comment %}
+                    <p><strong>Vos notes :</strong> {{ appointment.comment }}</p>
                 {% endif %}
-            </div>
+            </div> 
+
             
             <div class="info-box" style="border-left-color: #28a745;">
                 <h4 style="color: #28a745; margin-top: 0;">📍 Où nous trouver</h4>

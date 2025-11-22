@@ -20,6 +20,9 @@ class Appointement
     private ?\DateTimeImmutable $date_hour = null;
 
     #[ORM\Column]
+    private ?\DateTimeImmutable $end_date_hour = null;
+
+    #[ORM\Column]
     private ?bool $confirmed = null;
 
     #[ORM\Column(length: 255)]
@@ -28,21 +31,26 @@ class Appointement
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $time = null;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $total_duration = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
 
+    #[ORM\Column(length: 50)]
+    private ?string $status = 'pending';
+
     /**
      * @var Collection<int, Service>
      */
-    #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'appointement')]
+    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'appointements')]
     private Collection $services;
 
     public function __construct()
     {
         $this->services = new ArrayCollection();
+        $this->confirmed = false;
+        $this->status = 'pending';
     }
 
     public function getId(): ?int
@@ -58,7 +66,18 @@ class Appointement
     public function setDateHour(\DateTimeImmutable $date_hour): static
     {
         $this->date_hour = $date_hour;
+        $this->updateEndDateHour();
+        return $this;
+    }
 
+    public function getEndDateHour(): ?\DateTimeImmutable
+    {
+        return $this->end_date_hour;
+    }
+
+    public function setEndDateHour(\DateTimeImmutable $end_date_hour): static
+    {
+        $this->end_date_hour = $end_date_hour;
         return $this;
     }
 
@@ -70,7 +89,6 @@ class Appointement
     public function setConfirmed(bool $confirmed): static
     {
         $this->confirmed = $confirmed;
-
         return $this;
     }
 
@@ -82,7 +100,6 @@ class Appointement
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -94,19 +111,18 @@ class Appointement
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    public function getTime(): ?string
+    public function getTotalDuration(): ?int
     {
-        return $this->time;
+        return $this->total_duration;
     }
 
-    public function setTime(string $time): static
+    public function setTotalDuration(int $total_duration): static
     {
-        $this->time = $time;
-
+        $this->total_duration = $total_duration;
+        $this->updateEndDateHour();
         return $this;
     }
 
@@ -118,7 +134,17 @@ class Appointement
     public function setComment(?string $comment): static
     {
         $this->comment = $comment;
+        return $this;
+    }
 
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
         return $this;
     }
 
@@ -134,7 +160,7 @@ class Appointement
     {
         if (!$this->services->contains($service)) {
             $this->services->add($service);
-            $service->addAppointement($this);
+            $this->calculateTotalDuration();
         }
 
         return $this;
@@ -143,9 +169,51 @@ class Appointement
     public function removeService(Service $service): static
     {
         if ($this->services->removeElement($service)) {
-            $service->removeAppointement($this);
+            $this->calculateTotalDuration();
         }
 
         return $this;
+    }
+
+    /**
+     * Calcule la durée totale en fonction des services sélectionnés
+     */
+    public function calculateTotalDuration(): void
+    {
+        $total = 0;
+        foreach ($this->services as $service) {
+            $total += $service->getTime();
+        }
+        $this->total_duration = $total;
+        $this->updateEndDateHour();
+    }
+
+    /**
+     * Met à jour l'heure de fin en fonction de la durée totale
+     */
+    private function updateEndDateHour(): void
+    {
+        if ($this->date_hour && $this->total_duration) {
+            $endTime = \DateTime::createFromImmutable($this->date_hour);
+            $endTime->modify('+' . $this->total_duration . ' minutes');
+            $this->end_date_hour = \DateTimeImmutable::createFromMutable($endTime);
+        }
+    }
+
+    /**
+     * Vérifie si ce rendez-vous est en conflit avec un autre
+     */
+    public function isConflictWith(Appointement $other): bool
+    {
+        if (!$this->date_hour || !$this->end_date_hour || 
+            !$other->getDateHour() || !$other->getEndDateHour()) {
+            return false;
+        }
+
+        // Vérifier si les plages horaires se chevauchent
+        return !(
+            $this->end_date_hour <= $other->getDateHour() ||
+            $this->date_hour >= $other->getEndDateHour()
+        );
     }
 }

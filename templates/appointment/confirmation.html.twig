@@ -1,0 +1,243 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de rendez-vous - Salon Luxe{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .confirmation-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .success-icon {
+        font-size: 5rem;
+        color: var(--gold);
+        animation: scaleIn 0.5s ease-out;
+    }
+    
+    @keyframes scaleIn {
+        from {
+            transform: scale(0);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    
+    .appointment-details {
+        background: linear-gradient(135deg, var(--black) 0%, var(--dark-gray) 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+    }
+    
+    .detail-item {
+        border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        padding: 15px 0;
+    }
+    
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        color: var(--gold);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .calendar-add-btn {
+        background: var(--gold);
+        color: var(--black);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .calendar-add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        color: var(--black);
+    }
+    
+    .next-steps {
+        background: #f8f9fa;
+        border-left: 4px solid var(--gold);
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 30px;
+    }
+    
+    .service-badge {
+        background: var(--gold);
+        color: var(--black);
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 5px 5px 5px 0;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container my-5 confirmation-container">
+    <!-- Confirmation Success -->
+    <div class="text-center mb-5">
+        <div class="success-icon mb-4">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h1 class="display-4 fw-bold mb-3">
+            Demande <span class="text-gold">Envoyée</span> !
+        </h1>
+        <p class="lead">
+            Merci {{ appointment.name }} ! Votre demande de rendez-vous a été transmise avec succès.
+        </p>
+        <p class="text-muted">
+            Un email de confirmation a été envoyé à <strong>{{ appointment.email }}</strong>
+        </p>
+    </div>
+    
+    <!-- Détails du rendez-vous -->
+    <div class="appointment-details mb-4">
+        <h3 class="text-gold mb-4 text-center">
+            <i class="bi bi-calendar-check"></i> Détails de votre rendez-vous
+        </h3>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="detail-item">
+                    <span class="detail-label">
+                        <i class="bi bi-person"></i> Nom
+                    </span>
+                    {{ appointment.name }}
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">
+                        <i class="bi bi-envelope"></i> Email
+                    </span>
+                    {{ appointment.email }}
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">
+                        <i class="bi bi-calendar3"></i> Date
+                    </span>
+                    {{ appointment.dateHour|date('l d F Y', 'Europe/Paris') }}
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="detail-item">
+                    <span class="detail-label">
+                        <i class="bi bi-clock"></i> Horaire
+                    </span>
+                    {{ appointment.dateHour|date('H:i') }} - {{ appointment.endDateHour|date('H:i') }}
+                    <small class="text-white-50">({{ appointment.totalDuration }} minutes)</small>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">
+                        <i class="bi bi-scissors"></i> Services
+                    </span>
+                    {% for service in appointment.services %}
+                        <span class="service-badge">{{ service.name }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">
+                        <i class="bi bi-hourglass-split"></i> Statut
+                    </span>
+                    <span class="badge bg-warning text-dark">En attente de confirmation</span>
+                </div>
+            </div>
+        </div>
+        
+        {% if appointment.comment %}
+        <div class="detail-item">
+            <span class="detail-label">
+                <i class="bi bi-chat-left-text"></i> Notes
+            </span>
+            {{ appointment.comment }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Prochaines étapes -->
+    <div class="next-steps">
+        <h5 class="text-gold mb-3">
+            <i class="bi bi-info-circle"></i> Prochaines étapes
+        </h5>
+        <ul class="mb-0">
+            <li>Notre équipe va examiner votre demande dans les plus brefs délais</li>
+            <li>Vous recevrez un <strong>email de confirmation</strong> une fois votre rendez-vous validé</li>
+            <li>En cas d'indisponibilité, nous vous proposerons un autre créneau</li>
+            <li>Si vous avez des questions, n'hésitez pas à nous contacter au <strong>+33 1 23 45 67 89</strong></li>
+        </ul>
+    </div>
+    
+    <!-- Actions -->
+    <div class="text-center mt-5">
+        <h5 class="mb-4">Ajouter à votre calendrier</h5>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+            <a href="{{ google_calendar_link(appointment) }}" 
+               target="_blank"
+               class="calendar-add-btn">
+                <i class="bi bi-google"></i> Google Calendar
+            </a>
+            <a href="{{ outlook_calendar_link(appointment) }}" 
+               target="_blank"
+               class="calendar-add-btn">
+                <i class="bi bi-microsoft"></i> Outlook
+            </a>
+        </div>
+        
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="{{ path('app_home') }}" class="btn btn-black btn-lg">
+                <i class="bi bi-house"></i> Retour à l'accueil
+            </a>
+            <a href="{{ path('app_appointment') }}" class="btn btn-gold btn-lg">
+                <i class="bi bi-plus-circle"></i> Nouveau rendez-vous
+            </a>
+        </div>
+    </div>
+    
+    <!-- Informations de contact -->
+    <div class="card mt-5 border-0 shadow">
+        <div class="card-body text-center">
+            <h5 class="text-gold mb-3">
+                <i class="bi bi-telephone"></i> Besoin d'aide ?
+            </h5>
+            <p class="mb-2">
+                N'hésitez pas à nous contacter pour toute question ou modification
+            </p>
+            <div class="d-flex justify-content-center gap-4 mt-3">
+                <div>
+                    <i class="bi bi-telephone-fill text-gold"></i>
+                    <strong>+33 1 23 45 67 89</strong>
+                </div>
+                <div>
+                    <i class="bi bi-envelope-fill text-gold"></i>
+                    <strong>contact@salonluxe.fr</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script pour imprimer ou sauvegarder -->
+<script>
+function printConfirmation() {
+    window.print();
+}
+</script>
+{% endblock %}

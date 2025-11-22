@@ -3,3 +3,39 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+# Routes principales
+app_appointment:
+    path: /rendez-vous
+    controller: App\Controller\AppointmentController::new
+
+app_appointment_submit:
+    path: /rendez-vous/submit
+    controller: App\Controller\AppointmentController::submit
+    methods: POST
+
+app_appointment_confirmation:
+    path: /rendez-vous/confirmation/{id}
+    controller: App\Controller\AppointmentController::confirmation
+
+# Routes API
+api_get_services:
+    path: /api/services
+    controller: App\Controller\AppointmentController::getServices
+
+api_appointment_available_slots:
+    path: /api/appointment/available-slots
+    controller: App\Controller\Api\AppointmentApiController::getAvailableSlots
+    methods: POST
+
+api_appointment_check_conflict:
+    path: /api/appointment/check-conflict
+    controller: App\Controller\Api\AppointmentApiController::checkConflict
+    methods: POST
+
+api_appointment_calculate_duration:
+    path: /api/appointment/calculate-duration
+    controller: App\Controller\Api\AppointmentApiController::calculateDuration
+    methods: POST
+app_appointment_ics:
+    path: /rendez-vous/{id}/ics
+    controller: App\Controller\AppointmentController::downloadIcs

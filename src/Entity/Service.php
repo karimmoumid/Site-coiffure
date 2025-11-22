@@ -20,13 +20,10 @@ class Service
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $s√mall_description = null;
+    private ?string $small_description = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $complet_description = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $image = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
@@ -34,28 +31,30 @@ class Service
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $time = null;
 
-    #[ORM\Column]
-    private ?bool $actif = null;
-
-    /**
-     * @var Collection<int, Appointement>
-     */
-    #[ORM\ManyToMany(targetEntity: Appointement::class, inversedBy: 'services')]
-    private Collection $appointement;
+    #[ORM\ManyToOne(targetEntity: ServiceCategory::class, inversedBy: 'services')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ServiceCategory $service_category = null;
 
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'service')]
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'service', cascade: ['persist', 'remove'])]
     private Collection $images;
 
-    #[ORM\ManyToOne(inversedBy: 'services')]
-    private ?ServiceCategory $service_category = null;
+    /**
+     * @var Collection<int, Appointement>
+     */
+    #[ORM\ManyToMany(targetEntity: Appointement::class, mappedBy: 'services')]
+    private Collection $appointements;
+
+    #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Image $mainImage = null;
 
     public function __construct()
     {
-        $this->appointement = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->appointements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,19 +70,17 @@ class Service
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
-    public function getS√mallDescription(): ?string
+    public function getSmallDescription(): ?string
     {
-        return $this->s√mall_description;
+        return $this->small_description;
     }
 
-    public function setS√mallDescription(string $s√mall_description): static
+    public function setSmallDescription(string $small_description): static
     {
-        $this->s√mall_description = $s√mall_description;
-
+        $this->small_description = $small_description;
         return $this;
     }
 
@@ -95,19 +92,6 @@ class Service
     public function setCompletDescription(string $complet_description): static
     {
         $this->complet_description = $complet_description;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): static
-    {
-        $this->image = $image;
-
         return $this;
     }
 
@@ -119,55 +103,41 @@ class Service
     public function setPrice(string $price): static
     {
         $this->price = $price;
-
         return $this;
     }
 
-    public function getTime(): ?string
+    public function getTime(): ?int
     {
-        return $this->time;
+        // Retourner le temps en minutes (entier)
+        return (int) $this->time;
     }
 
     public function setTime(string $time): static
     {
         $this->time = $time;
-
         return $this;
     }
 
-    public function isActif(): ?bool
+    public function getDuration(): ?int
     {
-        return $this->actif;
+        // Alias pour getTime() pour la compatibilit√©
+        return $this->getTime();
     }
 
-    public function setActif(bool $actif): static
+    public function setDuration(int $duration): static
     {
-        $this->actif = $actif;
-
+        $this->time = (string) $duration;
         return $this;
     }
 
-    /**
-     * @return Collection<int, Appointement>
-     */
-    public function getAppointement(): Collection
+    public function getServiceCategory(): ?ServiceCategory
     {
-        return $this->appointement;
+        return $this->service_category;
     }
 
-    public function addAppointement(Appointement $appointement): static
+    public function setServiceCategory(?ServiceCategory $service_category): static
     {
-        if (!$this->appointement->contains($appointement)) {
-            $this->appointement->add($appointement);
-        }
-
-        return $this;
-    }
-
-    public function removeAppointement(Appointement $appointement): static
-    {
-        $this->appointement->removeElement($appointement);
-
+        $this->service_category = $service_category;
         return $this;
     }
 
@@ -185,7 +155,6 @@ class Service
             $this->images->add($image);
             $image->setService($this);
         }
-
         return $this;
     }
 
@@ -197,19 +166,68 @@ class Service
                 $image->setService(null);
             }
         }
-
         return $this;
     }
 
-    public function getServiceCategory(): ?ServiceCategory
+    /**
+     * @return Collection<int, Appointement>
+     */
+    public function getAppointements(): Collection
     {
-        return $this->service_category;
+        return $this->appointements;
     }
 
-    public function setServiceCategory(?ServiceCategory $service_category): static
+    public function addAppointement(Appointement $appointement): static
     {
-        $this->service_category = $service_category;
-
+        if (!$this->appointements->contains($appointement)) {
+            $this->appointements->add($appointement);
+            $appointement->addService($this);
+        }
         return $this;
+    }
+
+    public function removeAppointement(Appointement $appointement): static
+    {
+        if ($this->appointements->removeElement($appointement)) {
+            $appointement->removeService($this);
+        }
+        return $this;
+    }
+
+    public function getMainImage(): ?Image
+    {
+        return $this->mainImage;
+    }
+
+    public function setMainImage(?Image $mainImage): static
+    {
+        $this->mainImage = $mainImage;
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        // Retourne l'image principale ou la premi√®re image si pas d'image principale
+        if ($this->mainImage) {
+            return $this->mainImage;
+        }
+        
+        if (!$this->images->isEmpty()) {
+            return $this->images->first();
+        }
+        
+        return null;
+    }
+
+    /**
+     * M√©thode pour l'affichage dans les formulaires
+     */
+    public function __toString(): string
+    {
+        return sprintf('%s - %s‚Ç¨ (%d min)', 
+            $this->name, 
+            $this->price, 
+            $this->getTime()
+        );
     }
 }

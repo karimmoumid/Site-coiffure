@@ -2,165 +2,652 @@
 
 {% block title %}Prendre Rendez-vous - Salon Luxe{% endblock %}
 
+{% block stylesheets %}
+<style>
+    .time-slot {
+        padding: 10px 15px;
+        margin: 5px;
+        border: 2px solid #dee2e6;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        min-width: 100px;
+        text-align: center;
+    }
+    
+    .time-slot:hover:not(.disabled) {
+        border-color: var(--gold);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+    }
+    
+    .time-slot.selected {
+        background-color: var(--gold);
+        color: var(--black);
+        border-color: var(--gold);
+        font-weight: 600;
+    }
+    
+    .time-slot.disabled {
+        background-color: #e9ecef;
+        color: #6c757d;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+    
+    .time-slot.past {
+        background-color: #f8f9fa;
+        color: #adb5bd;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+    
+    .service-card {
+        border: 2px solid transparent;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .service-card:hover {
+        border-color: var(--gold);
+        transform: translateY(-3px);
+    }
+    
+    .service-card.selected {
+        border-color: var(--gold);
+        background-color: rgba(255, 215, 0, 0.1);
+    }
+    
+    .service-checkbox {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--gold);
+    }
+    
+    .summary-card {
+        background: linear-gradient(135deg, var(--black) 0%, var(--dark-gray) 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 20px;
+        top: 20px;
+    }
+    
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .loading-spinner.active {
+        display: block;
+    }
+    
+    .date-selector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .date-nav-btn {
+        background: var(--black);
+        color: var(--gold);
+        border: 1px solid var(--gold);
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .date-nav-btn:hover {
+        background: var(--gold);
+        color: var(--black);
+    }
+    
+    .date-nav-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    #selectedDate {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--gold);
+        min-width: 200px;
+        text-align: center;
+    }
+    
+    .slots-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+    
+    .alert-slot {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        color: #856404;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
 <section class="hero-section">
     <div class="container text-center">
         <h1 class="display-4 fw-bold mb-3">
-            Prendre <span class="text-gold">Rendez-vous</span>
+            Réservez votre <span class="text-gold">Rendez-vous</span>
         </h1>
-        <p class="lead">Réservez votre créneau en quelques clics</p>
+        <p class="lead">Sélectionnez vos services et choisissez votre créneau</p>
     </div>
 </section>
 
 <div class="container my-5">
-    <div class="row justify-content-center">
+    <div class="row">
+        <!-- Formulaire principal -->
         <div class="col-lg-8">
-            <div class="card shadow-lg border-0">
-                <div class="card-header text-center py-4">
-                    <h3 class="mb-0">
-                        <i class="bi bi-calendar-plus"></i> Formulaire de Réservation
-                    </h3>
-                </div>
-                <div class="card-body p-4">
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> 
-                        <strong>Information :</strong> Votre demande de rendez-vous sera confirmée par notre équipe dans les plus brefs délais. Vous recevrez un email de confirmation.
+            <form id="appointmentForm" method="post" action="{{ path('app_appointment_submit') }}">
+                <!-- Étape 1: Informations personnelles -->
+                <div class="card shadow-lg border-0 mb-4">
+                    <div class="card-header bg-dark text-gold">
+                        <h4 class="mb-0">
+                            <i class="bi bi-1-circle-fill"></i> Vos informations
+                        </h4>
                     </div>
-
-                    {{ form_start(form) }}
-                    
-                    <div class="row g-3">
-                        <!-- Informations personnelles -->
-                        <div class="col-12">
-                            <h5 class="text-gold mb-3">
-                                <i class="bi bi-person-fill"></i> Vos informations
-                            </h5>
-                        </div>
-                        
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-person"></i> Nom complet <span class="text-danger">*</span>
-                            </label>
-                            {{ form_widget(form.name) }}
-                            {{ form_errors(form.name) }}
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-envelope"></i> Email <span class="text-danger">*</span>
-                            </label>
-                            {{ form_widget(form.email) }}
-                            {{ form_errors(form.email) }}
-                        </div>
-                        
-                        
-                        <!-- Détails du rendez-vous -->
-                        <div class="col-12 mt-4">
-                            <h5 class="text-gold mb-3">
-                                <i class="bi bi-scissors"></i> Détails du rendez-vous
-                            </h5>
-                        </div>
-                        
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-star"></i> Service <span class="text-danger">*</span>
-                            </label>
-                            {{ form_widget(form.services) }}
-                            {{ form_errors(form.services) }}
-                            <small class="form-text text-muted">
-                                <i class="bi bi-info-circle"></i> Choisissez le service que vous souhaitez
-                            </small>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-calendar"></i> Date <span class="text-danger">*</span>
-                            </label>
-                            {{ form_widget(form.date) }}
-                            {{ form_errors(form.date) }}
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-clock"></i> Heure <span class="text-danger">*</span>
-                            </label>
-                            {{ form_widget(form.time) }}
-                            {{ form_errors(form.time) }}
-                            <small class="form-text text-muted">
-                                Horaires : 9h - 19h
-                            </small>
-                        </div>
-                        
-                        <div class="col-12">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-chat-left-text"></i> Notes ou demandes particulières
-                            </label>
-                            {{ form_widget(form.comment) }}
-                            {{ form_errors(form.comment) }}
-                        </div>
-                        
-                        <!-- Boutons -->
-                        <div class="col-12 mt-4">
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-gold btn-lg">
-                                    <i class="bi bi-send"></i> Envoyer ma demande
-                                </button>
-                                <a href="{{ path('app_home') }}" class="btn btn-black">
-                                    <i class="bi bi-arrow-left"></i> Retour à l'accueil
-                                </a>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-person"></i> Nom complet <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-envelope"></i> Email <span class="text-danger">*</span>
+                                </label>
+                                <input type="email" class="form-control" id="email" name="email" required>
                             </div>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Étape 2: Sélection des services -->
+                <div class="card shadow-lg border-0 mb-4">
+                    <div class="card-header bg-dark text-gold">
+                        <h4 class="mb-0">
+                            <i class="bi bi-2-circle-fill"></i> Choisissez vos services
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div id="servicesContainer" class="row g-3">
+                            <!-- Les services seront chargés ici via AJAX -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Étape 3: Sélection de la date et de l'heure -->
+                <div class="card shadow-lg border-0 mb-4">
+                    <div class="card-header bg-dark text-gold">
+                        <h4 class="mb-0">
+                            <i class="bi bi-3-circle-fill"></i> Choisissez votre créneau
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Sélecteur de date -->
+                        <div class="date-selector">
+                            <button type="button" class="date-nav-btn" id="prevDay">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <input type="date" 
+                                   id="dateInput" 
+                                   class="form-control" 
+                                   style="max-width: 200px;"
+                                   min="{{ 'now'|date('Y-m-d') }}"
+                                   value="{{ 'now'|date('Y-m-d') }}">
+                            <button type="button" class="date-nav-btn" id="nextDay">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div id="selectedDate" class="mb-3"></div>
+                        
+                        <!-- Indicateur de chargement -->
+                        <div class="loading-spinner" id="slotsLoading">
+                            <div class="spinner-border text-gold" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                            <p class="mt-2">Chargement des créneaux disponibles...</p>
+                        </div>
+                        
+                        <!-- Créneaux disponibles -->
+                        <div id="timeSlotsContainer">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> Sélectionnez d'abord vos services pour voir les créneaux disponibles.
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" id="selectedSlot" name="appointment_slot">
+                    </div>
+                </div>
+                
+                <!-- Étape 4: Notes optionnelles -->
+                <div class="card shadow-lg border-0 mb-4">
+                    <div class="card-header bg-dark text-gold">
+                        <h4 class="mb-0">
+                            <i class="bi bi-4-circle-fill"></i> Informations complémentaires (optionnel)
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-chat-left-text"></i> Notes ou demandes particulières
+                        </label>
+                        <textarea class="form-control" name="comment" rows="3" 
+                                  placeholder="Informations supplémentaires..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Bouton de soumission -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-gold btn-lg" id="submitBtn" disabled>
+                        <i class="bi bi-check-circle"></i> Confirmer le rendez-vous
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Résumé de la réservation -->
+        <div class="col-lg-4">
+            <div class="summary-card">
+                <h5 class="text-gold mb-4">
+                    <i class="bi bi-receipt"></i> Résumé de votre réservation
+                </h5>
+                
+                <div id="summaryContent">
+                    <div class="mb-3">
+                        <h6 class="text-gold">Services sélectionnés</h6>
+                        <div id="selectedServicesList" class="text-white-50">
+                            Aucun service sélectionné
+                        </div>
+                    </div>
                     
-                    {{ form_end(form) }}
+                    <hr class="border-gold">
+                    
+                    <div class="mb-3">
+                        <h6 class="text-gold">Date & Heure</h6>
+                        <div id="selectedDateTime" class="text-white-50">
+                            Non sélectionnée
+                        </div>
+                    </div>
+                    
+                    <hr class="border-gold">
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Durée totale:</span>
+                        <strong id="totalDuration">0 min</strong>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Prix total:</span>
+                        <strong class="text-gold fs-4" id="totalPrice">0 €</strong>
+                    </div>
                 </div>
             </div>
             
-            <!-- Informations utiles -->
-            <div class="row mt-4 g-3">
-                <div class="col-md-6">
-                    <div class="card bg-dark text-white h-100">
-                        <div class="card-body">
-                            <h5 class="text-gold">
-                                <i class="bi bi-clock-history"></i> Horaires
-                            </h5>
-                            <p class="mb-0">
-                                Lundi - Samedi : 9h - 19h<br>
-                                Dimanche : Fermé
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card bg-dark text-white h-100">
-                        <div class="card-body">
-                            <h5 class="text-gold">
-                                <i class="bi bi-telephone"></i> Contact Urgent
-                            </h5>
-                            <p class="mb-0">
-                                Téléphone : +33 1 23 45 67 89<br>
-                                Email : contact@salonluxe.fr
-                            </p>
-                        </div>
-                    </div>
+            <!-- Informations du salon -->
+            <div class="card mt-4 border-0">
+                <div class="card-body">
+                    <h6 class="text-gold mb-3">
+                        <i class="bi bi-info-circle"></i> Informations
+                    </h6>
+                    <p class="small mb-2">
+                        <i class="bi bi-clock"></i> Horaires: 9h - 19h
+                    </p>
+                    <p class="small mb-2">
+                        <i class="bi bi-geo-alt"></i> 123 Rue de la Beauté, Paris
+                    </p>
+                    <p class="small mb-0">
+                        <i class="bi bi-telephone"></i> +33 1 23 45 67 89
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-    .form-control:focus, .form-select:focus {
-        border-color: var(--gold);
-        box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('appointmentForm');
+    const dateInput = document.getElementById('dateInput');
+    const selectedServices = new Set();
+    let currentSlot = null;
+    
+    // Charger les services disponibles
+    loadServices();
+    
+    // Écouteurs d'événements
+    dateInput.addEventListener('change', loadTimeSlots);
+    document.getElementById('prevDay').addEventListener('click', changeDay(-1));
+    document.getElementById('nextDay').addEventListener('click', changeDay(1));
+    
+    // Charger les services via AJAX
+    async function loadServices() {
+        try {
+            const response = await fetch('{{ path("api_get_services") }}');
+            const services = await response.json();
+            
+            const container = document.getElementById('servicesContainer');
+            container.innerHTML = '';
+            
+            services.forEach(service => {
+                const serviceCard = createServiceCard(service);
+                container.appendChild(serviceCard);
+            });
+        } catch (error) {
+            console.error('Erreur lors du chargement des services:', error);
+        }
     }
     
-    .form-label {
-        color: var(--black);
+    // Créer une carte de service
+    function createServiceCard(service) {
+        const col = document.createElement('div');
+        col.className = 'col-md-6';
+        
+        col.innerHTML = `
+            <div class="card service-card h-100" data-service-id="${service.id}">
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input service-checkbox" 
+                               type="checkbox" 
+                               value="${service.id}"
+                               id="service-${service.id}"
+                               data-duration="${service.duration}"
+                               data-price="${service.price}"
+                               data-name="${service.name}">
+                        <label class="form-check-label w-100" for="service-${service.id}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">${service.name}</h6>
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock"></i> ${service.duration} min
+                                    </small>
+                                </div>
+                                <span class="badge badge-gold">${service.price} €</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Gérer la sélection
+        const checkbox = col.querySelector('.service-checkbox');
+        const card = col.querySelector('.service-card');
+        
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                selectedServices.add(service.id);
+                card.classList.add('selected');
+            } else {
+                selectedServices.delete(service.id);
+                card.classList.remove('selected');
+            }
+            updateSummary();
+            loadTimeSlots();
+        });
+        
+        return col;
     }
     
-    .invalid-feedback {
-        display: block;
+    // Charger les créneaux horaires disponibles
+    async function loadTimeSlots() {
+        if (selectedServices.size === 0) {
+            document.getElementById('timeSlotsContainer').innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Sélectionnez d'abord vos services pour voir les créneaux disponibles.
+                </div>
+            `;
+            return;
+        }
+        
+        const loading = document.getElementById('slotsLoading');
+        loading.classList.add('active');
+        
+        try {
+            const response = await fetch('{{ path("api_appointment_available_slots") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    date: dateInput.value,
+                    services: Array.from(selectedServices)
+                })
+            });
+            
+            const data = await response.json();
+            displayTimeSlots(data.slots);
+            
+            // Mettre à jour l'affichage de la date
+            updateDateDisplay();
+            
+        } catch (error) {
+            console.error('Erreur lors du chargement des créneaux:', error);
+            document.getElementById('timeSlotsContainer').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle"></i> Erreur lors du chargement des créneaux.
+                </div>
+            `;
+        } finally {
+            loading.classList.remove('active');
+        }
     }
-</style>
+    
+    // Afficher les créneaux horaires
+    function displayTimeSlots(slots) {
+        const container = document.getElementById('timeSlotsContainer');
+        
+        if (slots.length === 0) {
+            container.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="bi bi-calendar-x"></i> Aucun créneau disponible pour cette date.
+                </div>
+            `;
+            return;
+        }
+        
+        // Grouper les créneaux par période
+        const morningSlots = slots.filter(s => parseInt(s.time.split(':')[0]) < 12);
+        const afternoonSlots = slots.filter(s => parseInt(s.time.split(':')[0]) >= 12);
+        
+        let html = '';
+        
+        if (morningSlots.length > 0) {
+            html += '<h6 class="text-gold mb-3"><i class="bi bi-sunrise"></i> Matin</h6>';
+            html += '<div class="slots-grid mb-4">';
+            morningSlots.forEach(slot => {
+                html += createSlotButton(slot);
+            });
+            html += '</div>';
+        }
+        
+        if (afternoonSlots.length > 0) {
+            html += '<h6 class="text-gold mb-3"><i class="bi bi-sun"></i> Après-midi</h6>';
+            html += '<div class="slots-grid">';
+            afternoonSlots.forEach(slot => {
+                html += createSlotButton(slot);
+            });
+            html += '</div>';
+        }
+        
+        container.innerHTML = html;
+        
+        // Ajouter les écouteurs d'événements aux créneaux
+        container.querySelectorAll('.time-slot').forEach(slot => {
+            if (!slot.classList.contains('disabled')) {
+                slot.addEventListener('click', function() {
+                    selectTimeSlot(this);
+                });
+            }
+        });
+    }
+    
+    // Créer un bouton de créneau
+    function createSlotButton(slot) {
+        let className = 'time-slot';
+        let disabled = '';
+        
+        if (!slot.available) {
+            if (slot.reason === 'past') {
+                className += ' past';
+            } else {
+                className += ' disabled';
+            }
+            disabled = 'disabled';
+        }
+        
+        return `
+            <button type="button" 
+                    class="${className}" 
+                    data-datetime="${slot.datetime}"
+                    data-time="${slot.time}"
+                    ${disabled}>
+                <i class="bi bi-clock"></i> ${slot.time}
+            </button>
+        `;
+    }
+    
+    // Sélectionner un créneau horaire
+    function selectTimeSlot(slotElement) {
+        // Désélectionner l'ancien créneau
+        document.querySelectorAll('.time-slot').forEach(s => {
+            s.classList.remove('selected');
+        });
+        
+        // Sélectionner le nouveau créneau
+        slotElement.classList.add('selected');
+        currentSlot = slotElement.dataset.datetime;
+        document.getElementById('selectedSlot').value = currentSlot;
+        
+        updateSummary();
+        checkFormValidity();
+    }
+    
+    // Mettre à jour le résumé
+    function updateSummary() {
+        let totalDuration = 0;
+        let totalPrice = 0;
+        let servicesList = '';
+        
+        document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
+            const duration = parseInt(checkbox.dataset.duration);
+            const price = parseFloat(checkbox.dataset.price);
+            const name = checkbox.dataset.name;
+            
+            totalDuration += duration;
+            totalPrice += price;
+            servicesList += `
+                <div class="d-flex justify-content-between small mb-1">
+                    <span>${name}</span>
+                    <span>${price} €</span>
+                </div>
+            `;
+        });
+        
+        if (servicesList === '') {
+            servicesList = '<span class="text-white-50">Aucun service sélectionné</span>';
+        }
+        
+        document.getElementById('selectedServicesList').innerHTML = servicesList;
+        document.getElementById('totalDuration').textContent = totalDuration + ' min';
+        document.getElementById('totalPrice').textContent = totalPrice.toFixed(2) + ' €';
+        
+        // Mettre à jour la date et l'heure
+        if (currentSlot) {
+            const selectedTime = document.querySelector('.time-slot.selected');
+            if (selectedTime) {
+                const date = new Date(dateInput.value);
+                const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                const formattedDate = date.toLocaleDateString('fr-FR', options);
+                
+                document.getElementById('selectedDateTime').innerHTML = `
+                    <div>${formattedDate}</div>
+                    <div class="fs-5 text-gold">${selectedTime.dataset.time}</div>
+                `;
+            }
+        } else {
+            document.getElementById('selectedDateTime').innerHTML = '<span class="text-white-50">Non sélectionnée</span>';
+        }
+    }
+    
+    // Mettre à jour l'affichage de la date
+    function updateDateDisplay() {
+        const date = new Date(dateInput.value);
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        const formattedDate = date.toLocaleDateString('fr-FR', options);
+        
+        document.getElementById('selectedDate').textContent = formattedDate;
+    }
+    
+    // Changer de jour
+    function changeDay(delta) {
+        return function() {
+            const currentDate = new Date(dateInput.value);
+            currentDate.setDate(currentDate.getDate() + delta);
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (currentDate >= today) {
+                dateInput.value = currentDate.toISOString().split('T')[0];
+                loadTimeSlots();
+            }
+        };
+    }
+    
+    // Vérifier la validité du formulaire
+    function checkFormValidity() {
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const hasServices = selectedServices.size > 0;
+        const hasSlot = currentSlot !== null;
+        
+        const isValid = name && email && hasServices && hasSlot;
+        
+        document.getElementById('submitBtn').disabled = !isValid;
+    }
+    
+    // Écouteurs pour la validation du formulaire
+    document.getElementById('name').addEventListener('input', checkFormValidity);
+    document.getElementById('email').addEventListener('input', checkFormValidity);
+    
+    // Soumission du formulaire
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        
+        // Ajouter les services sélectionnés au formulaire
+        selectedServices.forEach(serviceId => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'services[]';
+            input.value = serviceId;
+            form.appendChild(input);
+        });
+        
+        // Soumettre le formulaire
+        form.submit();
+    });
+    
+    // Initialisation
+    updateDateDisplay();
+});
+</script>
+{% endblock %}
 {% endblock %}
