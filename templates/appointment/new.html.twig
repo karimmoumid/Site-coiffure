@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prendre Rendez-vous - Salon Luxe{% endblock %}
+
+{% block body %}
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            Prendre <span class="text-gold">Rendez-vous</span>
+        </h1>
+        <p class="lead">Réservez votre créneau en quelques clics</p>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center py-4">
+                    <h3 class="mb-0">
+                        <i class="bi bi-calendar-plus"></i> Formulaire de Réservation
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> 
+                        <strong>Information :</strong> Votre demande de rendez-vous sera confirmée par notre équipe dans les plus brefs délais. Vous recevrez un email de confirmation.
+                    </div>
+
+                    {{ form_start(form) }}
+                    
+                    <div class="row g-3">
+                        <!-- Informations personnelles -->
+                        <div class="col-12">
+                            <h5 class="text-gold mb-3">
+                                <i class="bi bi-person-fill"></i> Vos informations
+                            </h5>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-person"></i> Nom complet <span class="text-danger">*</span>
+                            </label>
+                            {{ form_widget(form.name) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-envelope"></i> Email <span class="text-danger">*</span>
+                            </label>
+                            {{ form_widget(form.email) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+                        
+                        
+                        <!-- Détails du rendez-vous -->
+                        <div class="col-12 mt-4">
+                            <h5 class="text-gold mb-3">
+                                <i class="bi bi-scissors"></i> Détails du rendez-vous
+                            </h5>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-star"></i> Service <span class="text-danger">*</span>
+                            </label>
+                            {{ form_widget(form.services) }}
+                            {{ form_errors(form.services) }}
+                            <small class="form-text text-muted">
+                                <i class="bi bi-info-circle"></i> Choisissez le service que vous souhaitez
+                            </small>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-calendar"></i> Date <span class="text-danger">*</span>
+                            </label>
+                            {{ form_widget(form.date) }}
+                            {{ form_errors(form.date) }}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-clock"></i> Heure <span class="text-danger">*</span>
+                            </label>
+                            {{ form_widget(form.time) }}
+                            {{ form_errors(form.time) }}
+                            <small class="form-text text-muted">
+                                Horaires : 9h - 19h
+                            </small>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-chat-left-text"></i> Notes ou demandes particulières
+                            </label>
+                            {{ form_widget(form.comment) }}
+                            {{ form_errors(form.comment) }}
+                        </div>
+                        
+                        <!-- Boutons -->
+                        <div class="col-12 mt-4">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-gold btn-lg">
+                                    <i class="bi bi-send"></i> Envoyer ma demande
+                                </button>
+                                <a href="{{ path('app_home') }}" class="btn btn-black">
+                                    <i class="bi bi-arrow-left"></i> Retour à l'accueil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            
+            <!-- Informations utiles -->
+            <div class="row mt-4 g-3">
+                <div class="col-md-6">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body">
+                            <h5 class="text-gold">
+                                <i class="bi bi-clock-history"></i> Horaires
+                            </h5>
+                            <p class="mb-0">
+                                Lundi - Samedi : 9h - 19h<br>
+                                Dimanche : Fermé
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body">
+                            <h5 class="text-gold">
+                                <i class="bi bi-telephone"></i> Contact Urgent
+                            </h5>
+                            <p class="mb-0">
+                                Téléphone : +33 1 23 45 67 89<br>
+                                Email : contact@salonluxe.fr
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus, .form-select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+    }
+    
+    .form-label {
+        color: var(--black);
+    }
+    
+    .invalid-feedback {
+        display: block;
+    }
+</style>
+{% endblock %}

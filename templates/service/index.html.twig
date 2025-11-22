@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Services - Salon Luxe{% endblock %}
+
+{% block body %}
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            Nos <span class="text-gold">Services</span>
+        </h1>
+        <p class="lead">Découvrez notre gamme complète de services de coiffure professionnels</p>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row g-4">
+        {% for category in categories %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                {% if category.image %}
+                <img src="{{ asset('uploads/categories/' ~ category.image.path) }}" 
+                     class="card-img-top" 
+                     alt="{{ category.name }}"
+                     style="height: 250px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-dark d-flex align-items-center justify-content-center" 
+                     style="height: 250px;">
+                    <i class="bi bi-scissors text-gold" style="font-size: 5rem;"></i>
+                </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <h3 class="card-title text-gold h4">
+                        <i class="bi bi-bookmark-star-fill"></i> {{ category.name }}
+                    </h3>
+                    <p class="card-text text-muted">{{ category.description }}</p>
+                    
+                    {% if category.services|length > 0 %}
+                    <div class="mt-3">
+                        <h6 class="text-black mb-2">Services disponibles :</h6>
+                        <ul class="list-unstyled">
+                            {% for service in category.services|slice(0, 3) %}
+                            <li class="mb-1">
+                                <i class="bi bi-check2-circle text-gold"></i>
+                                <small>{{ service.name }} - <strong>{{ service.price }}€</strong></small>
+                            </li>
+                            {% endfor %}
+                            {% if category.services|length > 3 %}
+                            <li class="text-muted small">
+                                <i class="bi bi-three-dots"></i> Et {{ category.services|length - 3 }} autre(s) service(s)
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="card-footer bg-white border-0 d-grid">
+                    <a href="{{ path('app_service_category', {id: category.id}) }}" 
+                       class="btn btn-gold">
+                        <i class="bi bi-eye"></i> Voir tous les services
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="bi bi-info-circle"></i> Aucun service disponible pour le moment.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<section class="bg-dark text-white py-5">
+    <div class="container text-center">
+        <h2 class="text-gold mb-4">Envie de réserver ?</h2>
+        <p class="lead mb-4">Prenez rendez-vous en quelques clics</p>
+        <a href="{{ path('app_appointment') }}" class="btn btn-gold btn-lg">
+            <i class="bi bi-calendar-check"></i> Prendre Rendez-vous
+        </a>
+    </div>
+</section>
+{% endblock %}

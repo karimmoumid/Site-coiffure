@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Salon de Coiffure Luxe{% endblock %}
+
+{% block body %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-3 fw-bold mb-4">
+            Bienvenue au <span class="text-gold">Salon Luxe</span>
+        </h1>
+        <p class="lead mb-5">Révélez votre beauté avec nos services de coiffure professionnels</p>
+        <div>
+            <a href="{{ path('app_appointment') }}" class="btn btn-gold btn-lg me-3">
+                <i class="bi bi-calendar-check"></i> Prendre Rendez-vous
+            </a>
+            <a href="{{ path('app_services') }}" class="btn btn-black btn-lg">
+                <i class="bi bi-grid"></i> Découvrir nos Services
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Catégories de Services -->
+<section class="container mb-5">
+    <h2 class="text-center section-title">Nos Catégories de Services</h2>
+    
+    <div class="row g-4">
+        {% for category in categories %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                {% if category.image %}
+                <img src="{{ asset('uploads/categories/' ~ category.image.path) }}" 
+                     class="card-img-top" 
+                     alt="{{ category.name }}"
+                     style="height: 250px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-dark d-flex align-items-center justify-content-center" 
+                     style="height: 250px;">
+                    <i class="bi bi-scissors text-gold" style="font-size: 4rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title text-gold">
+                        <i class="bi bi-bookmark-star"></i> {{ category.name }}
+                    </h5>
+                    <p class="card-text">
+                        {% if category.description|length > 100 %}
+                            {{ category.description|slice(0, 100) }}...
+                        {% else %}
+                            {{ category.description }}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <a href="{{ path('app_service_category', {id: category.id}) }}" 
+                       class="btn btn-gold w-100">
+                        <i class="bi bi-eye"></i> Voir les Services
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="bi bi-info-circle"></i> Aucune catégorie de service disponible pour le moment.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Services en Vedette -->
+{% if featured_services|length > 0 %}
+<section class="container mb-5">
+    <h2 class="text-center section-title">Services Populaires</h2>
+    
+    <div class="row g-4">
+        {% for service in featured_services %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                {% if service.image %}
+                <img src="{{ asset('uploads/services/' ~ service.image.path) }}" 
+                     class="card-img-top" 
+                     alt="{{ service.name }}"
+                     style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center" 
+                     style="height: 200px; background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);">
+                    <i class="bi bi-star-fill text-gold" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ service.name }}</h5>
+                        <span class="badge badge-gold">{{ service.price }} €</span>
+                    </div>
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-clock"></i> {{ service.duration }} min
+                    </p>
+                    <p class="card-text">
+                        {% if service.description|length > 80 %}
+                            {{ service.description|slice(0, 80) }}...
+                        {% else %}
+                            {{ service.description }}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="card-footer bg-white border-0">
+                    <a href="{{ path('app_service_show', {id: service.id}) }}" 
+                       class="btn btn-black w-100">
+                        <i class="bi bi-info-circle"></i> Plus de détails
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Section Pourquoi nous choisir -->
+<section class="bg-dark text-white py-5 mb-5">
+    <div class="container">
+        <h2 class="text-center section-title text-gold">Pourquoi Choisir Salon Luxe ?</h2>
+        
+        <div class="row g-4 mt-4">
+            <div class="col-md-3 text-center">
+                <i class="bi bi-award-fill text-gold" style="font-size: 3rem;"></i>
+                <h5 class="mt-3 text-gold">Expertise</h5>
+                <p>Des coiffeurs expérimentés et passionnés</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <i class="bi bi-gem text-gold" style="font-size: 3rem;"></i>
+                <h5 class="mt-3 text-gold">Qualité Premium</h5>
+                <p>Produits haut de gamme pour vos cheveux</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <i class="bi bi-clock-history text-gold" style="font-size: 3rem;"></i>
+                <h5 class="mt-3 text-gold">Ponctualité</h5>
+                <p>Respect de vos rendez-vous</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <i class="bi bi-heart-fill text-gold" style="font-size: 3rem;"></i>
+                <h5 class="mt-3 text-gold">À votre écoute</h5>
+                <p>Service personnalisé et attentif</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="container text-center mb-5">
+    <div class="card bg-dark text-white p-5">
+        <h2 class="text-gold mb-4">Prêt à sublimer votre style ?</h2>
+        <p class="lead mb-4">Réservez votre rendez-vous dès maintenant et bénéficiez de notre expertise</p>
+        <div>
+            <a href="{{ path('app_appointment') }}" class="btn btn-gold btn-lg">
+                <i class="bi bi-calendar-plus"></i> Réserver Maintenant
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

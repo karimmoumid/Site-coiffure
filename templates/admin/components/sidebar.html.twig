@@ -1,0 +1,44 @@
+<nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar vh-100 position-sticky top-0">
+    <div class="position-sticky pt-3">
+        <h5 class="text-gold px-3 mb-4">
+            <i class="bi bi-speedometer2"></i> Admin Menu
+        </h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') == 'admin_dashboard' ? 'active' : '' }} text-white" 
+                   href="{{ path('admin_dashboard') }}">
+                    <i class="bi bi-house-door"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'admin_appointment' ? 'active' : '' }} text-white" 
+                   href="{{ path('admin_appointments') }}">
+                    <i class="bi bi-calendar-check"></i> Rendez-vous
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'admin_service' and 'category' not in app.request.get('_route') ? 'active' : '' }} text-white" 
+                   href="{{ path('admin_services') }}">
+                    <i class="bi bi-scissors"></i> Services
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'admin_service_categor' ? 'active' : '' }} text-white" 
+                   href="{{ path('admin_service_categories') }}">
+                    <i class="bi bi-bookmark"></i> Catégories de Services
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'admin_stock' ? 'active' : '' }} text-white" 
+                   href="{{ path('admin_stock') }}">
+                    <i class="bi bi-box-seam"></i> Gestion du Stock
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <a class="nav-link text-gold" href="{{ path('app_home') }}">
+                    <i class="bi bi-arrow-left-circle"></i> Retour au site
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

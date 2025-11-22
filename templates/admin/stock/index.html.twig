@@ -1,0 +1,289 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion du Stock - Admin{% endblock %}
+
+{% block body %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'admin/components/_sidebar.html.twig' %}
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-box-seam text-gold"></i> Gestion du Stock
+                </h1>
+                <div>
+                    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                        <i class="bi bi-plus-circle"></i> Nouveau Produit
+                    </button>
+                    <button class="btn btn-black" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                        <i class="bi bi-folder-plus"></i> Nouvelle Catégorie
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistiques du stock -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Total Produits</h6>
+                                    <h2 class="card-title mb-0">{{ products|length }}</h2>
+                                </div>
+                                <i class="bi bi-box" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card bg-warning text-dark">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Stock Faible</h6>
+                                    <h2 class="card-title mb-0">{{ low_stock }}</h2>
+                                </div>
+                                <i class="bi bi-exclamation-triangle" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Rupture</h6>
+                                    <h2 class="card-title mb-0">{{ out_of_stock }}</h2>
+                                </div>
+                                <i class="bi bi-x-circle" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau des produits -->
+            <div class="card">
+                <div class="card-header bg-dark text-gold">
+                    <h5 class="mb-0"><i class="bi bi-table"></i> Inventaire des Produits</h5>
+                </div>
+                <div class="card-body">
+                    {% if products|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Description</th>
+                                    <th>Catégorie</th>
+                                    <th>Prix</th>
+                                    <th>Quantité</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr>
+                                    <td><strong>{{ product.name }}</strong></td>
+                                    <td>
+                                        <small>{{ product.description }}</small>
+                                    </td>
+                                    <td>
+                                        {% if product.category %}
+                                        <span class="badge bg-secondary">{{ product.category.name }}</span>
+                                        {% else %}
+                                        <span class="badge bg-warning text-dark">Aucune</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><strong>{{ product.price }} €</strong></td>
+                                    <td>
+                                        <form method="post" action="{{ path('admin_stock_update_quantity', {id: product.id}) }}" class="d-flex align-items-center gap-2">
+                                            <input type="number" 
+                                                   name="quantity" 
+                                                   value="{{ product.quantity }}" 
+                                                   class="form-control form-control-sm" 
+                                                   style="width: 80px;"
+                                                   min="0">
+                                            <button type="submit" class="btn btn-sm btn-success" title="Mettre à jour">
+                                                <i class="bi bi-check"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        {% if product.quantity == 0 %}
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle"></i> Rupture
+                                        </span>
+                                        {% elseif product.quantity < 10 %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-exclamation-triangle"></i> Faible
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> OK
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form method="post" 
+                                              action="{{ path('admin_stock_product_delete', {id: product.id}) }}" 
+                                              style="display: inline;"
+                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center text-muted mb-0">
+                        <i class="bi bi-info-circle"></i> Aucun produit dans le stock. Ajoutez-en un pour commencer !
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Catégories de produits -->
+            {% if categories|length > 0 %}
+            <div class="card mt-4">
+                <div class="card-header bg-dark text-gold">
+                    <h5 class="mb-0"><i class="bi bi-folder"></i> Catégories de Produits</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        {% for category in categories %}
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title text-gold">{{ category.name }}</h6>
+                                    <p class="card-text small">{{ category.description }}</p>
+                                    <span class="badge bg-dark">
+                                        {{ category.products|length }} produit(s)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+
+<!-- Modal Ajouter Produit -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{{ path('admin_stock_product_add') }}">
+                <div class="modal-header bg-dark text-gold">
+                    <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Nouveau Produit</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nom <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Prix (€) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" name="price" step="0.01" min="0" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Quantité <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" name="quantity" min="0" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Catégorie</label>
+                        <select class="form-select" name="category">
+                            <option value="">Aucune</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-gold">
+                        <i class="bi bi-check"></i> Ajouter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Catégorie -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{{ path('admin_stock_category_add') }}">
+                <div class="modal-header bg-dark text-gold">
+                    <h5 class="modal-title"><i class="bi bi-folder-plus"></i> Nouvelle Catégorie</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nom <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="category_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Description</label>
+                        <textarea class="form-control" name="category_description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-gold">
+                        <i class="bi bi-check"></i> Créer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .sidebar {
+        background-color: var(--black) !important;
+    }
+    
+    .sidebar .nav-link {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+    }
+    
+    .sidebar .nav-link.active {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+        color: var(--gold) !important;
+    }
+</style>
+{% endblock %}

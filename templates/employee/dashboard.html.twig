@@ -1,0 +1,237 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Employé - Salon Luxe{% endblock %}
+
+{% block body %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Sidebar Employé -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar vh-100 position-sticky top-0">
+            <div class="position-sticky pt-3">
+                <h5 class="text-gold px-3 mb-4">
+                    <i class="bi bi-briefcase"></i> Menu Employé
+                </h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" href="{{ path('employee_dashboard') }}">
+                            <i class="bi bi-house-door"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('admin_appointments') }}">
+                            <i class="bi bi-calendar-check"></i> Rendez-vous
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="nav-link text-gold" href="{{ path('app_home') }}">
+                            <i class="bi bi-arrow-left-circle"></i> Retour au site
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-briefcase text-gold"></i> Dashboard Employé
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-gold">
+                            <i class="bi bi-calendar"></i> {{ 'now'|date('d/m/Y') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> 
+                Bienvenue <strong>{{ app.user.email }}</strong> ! Voici votre tableau de bord.
+            </div>
+
+            <!-- Statistiques -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Aujourd'hui</h6>
+                                    <h2 class="card-title mb-0">{{ stats.today_appointments }}</h2>
+                                </div>
+                                <i class="bi bi-calendar-day" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card bg-warning text-dark">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">En attente</h6>
+                                    <h2 class="card-title mb-0">{{ stats.pending_appointments }}</h2>
+                                </div>
+                                <i class="bi bi-hourglass-split" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-subtitle mb-2">Cette semaine</h6>
+                                    <h2 class="card-title mb-0">{{ stats.upcoming_this_week }}</h2>
+                                </div>
+                                <i class="bi bi-calendar-week" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rendez-vous en attente -->
+            {% if pending_appointments|length > 0 %}
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-dark text-gold">
+                            <h5 class="mb-0">
+                                <i class="bi bi-clock-history"></i> Rendez-vous en attente de validation
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Service</th>
+                                            <th>Date & Heure</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for appointment in pending_appointments %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ appointment.clientName }}</strong><br>
+                                                <small class="text-muted">{{ appointment.clientPhone }}</small>
+                                            </td>
+                                            <td>{{ appointment.service.name }}</td>
+                                            <td>
+                                                <i class="bi bi-calendar"></i> {{ appointment.appointmentDate|date('d/m/Y') }}<br>
+                                                <i class="bi bi-clock"></i> {{ appointment.appointmentTime|date('H:i') }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('admin_appointment_confirm', {id: appointment.id}) }}" 
+                                                   class="btn btn-sm btn-success">
+                                                    <i class="bi bi-check"></i> Confirmer
+                                                </a>
+                                                <a href="{{ path('admin_appointment_cancel', {id: appointment.id}) }}" 
+                                                   class="btn btn-sm btn-danger">
+                                                    <i class="bi bi-x"></i> Refuser
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a href="{{ path('admin_appointments') }}" class="btn btn-gold mt-3">
+                                <i class="bi bi-eye"></i> Voir tous les rendez-vous
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Prochains rendez-vous -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-dark text-gold">
+                            <h5 class="mb-0">
+                                <i class="bi bi-calendar-check"></i> Prochains rendez-vous
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if upcoming_appointments|length > 0 %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date & Heure</th>
+                                            <th>Client</th>
+                                            <th>Contact</th>
+                                            <th>Service</th>
+                                            <th>Durée</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for appointment in upcoming_appointments %}
+                                        <tr {% if appointment.appointmentDate|date('Y-m-d') == 'now'|date('Y-m-d') %}class="table-primary"{% endif %}>
+                                            <td>
+                                                <strong>
+                                                    <i class="bi bi-calendar"></i> {{ appointment.appointmentDate|date('d/m/Y') }}
+                                                </strong><br>
+                                                <i class="bi bi-clock"></i> {{ appointment.appointmentTime|date('H:i') }}
+                                            </td>
+                                            <td><strong>{{ appointment.clientName }}</strong></td>
+                                            <td>
+                                                <small>
+                                                    <i class="bi bi-telephone"></i> {{ appointment.clientPhone }}<br>
+                                                    <i class="bi bi-envelope"></i> {{ appointment.clientEmail }}
+                                                </small>
+                                            </td>
+                                            <td>{{ appointment.service.name }}</td>
+                                            <td>{{ appointment.service.duration }} min</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p class="text-center text-muted mb-0">
+                                <i class="bi bi-info-circle"></i> Aucun rendez-vous à venir
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .sidebar {
+        background-color: var(--black) !important;
+    }
+    
+    .sidebar .nav-link {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+    }
+    
+    .sidebar .nav-link.active {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+        color: var(--gold) !important;
+    }
+</style>
+{% endblock %}

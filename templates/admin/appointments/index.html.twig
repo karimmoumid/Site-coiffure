@@ -1,0 +1,194 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Rendez-vous - Admin{% endblock %}
+
+{% block body %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'admin/components/_sidebar.html.twig' %}
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-calendar-check text-gold"></i> Gestion des Rendez-vous
+                </h1>
+            </div>
+
+            <!-- Filtres par statut -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-warning filter-btn" data-status="pending">
+                            <i class="bi bi-hourglass-split"></i> En attente ({{ appointments|filter(a => a.status == 'pending')|length }})
+                        </button>
+                        <button type="button" class="btn btn-outline-success filter-btn" data-status="confirmed">
+                            <i class="bi bi-check-circle"></i> Confirmés ({{ appointments|filter(a => a.status == 'confirmed')|length }})
+                        </button>
+                        <button type="button" class="btn btn-outline-danger filter-btn" data-status="cancelled">
+                            <i class="bi bi-x-circle"></i> Annulés ({{ appointments|filter(a => a.status == 'cancelled')|length }})
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary filter-btn active" data-status="all">
+                            <i class="bi bi-list"></i> Tous
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table des rendez-vous -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="appointmentsTable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Client</th>
+                                    <th>Contact</th>
+                                    <th>Service</th>
+                                    <th>Date & Heure</th>
+                                    <th>Statut</th>
+                                    <th>Demandé le</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                <tr data-status="{{ appointment.status }}">
+                                    <td>#{{ appointment.id }}</td>
+                                    <td>
+                                        <strong>{{ appointment.clientName }}</strong>
+                                    </td>
+                                    <td>
+                                        <small>
+                                            <i class="bi bi-envelope"></i> {{ appointment.clientEmail }}<br>
+                                            <i class="bi bi-telephone"></i> {{ appointment.clientPhone }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <strong>{{ appointment.service.name }}</strong><br>
+                                        <small class="text-muted">{{ appointment.service.duration }} min - {{ appointment.service.price }}€</small>
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-calendar"></i> {{ appointment.appointmentDate|date('d/m/Y') }}<br>
+                                        <i class="bi bi-clock"></i> {{ appointment.appointmentTime|date('H:i') }}
+                                    </td>
+                                    <td>
+                                        {% if appointment.status == 'pending' %}
+                                            <span class="badge bg-warning">
+                                                <i class="bi bi-hourglass-split"></i> En attente
+                                            </span>
+                                        {% elseif appointment.status == 'confirmed' %}
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle"></i> Confirmé
+                                            </span>
+                                        {% elseif appointment.status == 'cancelled' %}
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle"></i> Annulé
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ appointment.createdAt|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            {% if appointment.status == 'pending' %}
+                                                <a href="{{ path('admin_appointment_confirm', {id: appointment.id}) }}" 
+                                                   class="btn btn-success" 
+                                                   title="Confirmer">
+                                                    <i class="bi bi-check"></i>
+                                                </a>
+                                                <a href="{{ path('admin_appointment_cancel', {id: appointment.id}) }}" 
+                                                   class="btn btn-danger" 
+                                                   title="Refuser">
+                                                    <i class="bi bi-x"></i>
+                                                </a>
+                                            {% elseif appointment.status == 'confirmed' %}
+                                                <a href="{{ path('admin_appointment_cancel', {id: appointment.id}) }}" 
+                                                   class="btn btn-warning" 
+                                                   title="Annuler">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </a>
+                                            {% endif %}
+                                            <a href="{{ path('admin_appointment_delete', {id: appointment.id}) }}" 
+                                               class="btn btn-dark" 
+                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?')"
+                                               title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% if appointment.notes %}
+                                <tr data-status="{{ appointment.status }}" class="table-info">
+                                    <td colspan="8">
+                                        <small><strong>Note:</strong> {{ appointment.notes }}</small>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">
+                                        <i class="bi bi-info-circle"></i> Aucun rendez-vous trouvé
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#appointmentsTable tbody tr[data-status]');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const status = this.dataset.status;
+            
+            tableRows.forEach(row => {
+                if (status === 'all' || row.dataset.status === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+
+<style>
+    .sidebar {
+        background-color: var(--black) !important;
+    }
+    
+    .sidebar .nav-link {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+    }
+    
+    .sidebar .nav-link.active {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+        color: var(--gold) !important;
+    }
+</style>
+{% endblock %}

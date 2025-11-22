@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Service - Admin{% endblock %}
+
+{% block body %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'admin/components/_sidebar.html.twig' %}
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-plus-circle text-gold"></i> Nouveau Service
+                </h1>
+                <a href="{{ path('admin_services') }}" class="btn btn-black">
+                    <i class="bi bi-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header bg-dark text-gold">
+                            <h5 class="mb-0"><i class="bi bi-file-earmark-plus"></i> Informations du Service</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                            
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-pencil"></i> Nom du service <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form_widget(form.name) }}
+                                    {{ form_errors(form.name) }}
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-tag"></i> Prix (€) <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form_widget(form.price) }}
+                                    {{ form_errors(form.price) }}
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-clock"></i> Durée (minutes) <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form_widget(form.duration) }}
+                                    {{ form_errors(form.duration) }}
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-bookmark"></i> Catégorie
+                                    </label>
+                                    {{ form_widget(form.category) }}
+                                    {{ form_errors(form.category) }}
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-text-left"></i> Description <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form_widget(form.description) }}
+                                    {{ form_errors(form.description) }}
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-image"></i> Image du service
+                                    </label>
+                                    {{ form_widget(form.imageFile) }}
+                                    {{ form_errors(form.imageFile) }}
+                                    <small class="form-text text-muted">
+                                        Formats acceptés : JPEG, PNG, GIF (5 Mo max)
+                                    </small>
+                                </div>
+                                
+                                <div class="col-12 mt-4">
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-gold btn-lg">
+                                            <i class="bi bi-check-circle"></i> Créer le Service
+                                        </button>
+                                        <a href="{{ path('admin_services') }}" class="btn btn-secondary">
+                                            <i class="bi bi-x-circle"></i> Annuler
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .form-control:focus, .form-select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+    }
+    
+    .sidebar {
+        background-color: var(--black) !important;
+    }
+    
+    .sidebar .nav-link {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+    }
+    
+    .sidebar .nav-link.active {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+        color: var(--gold) !important;
+    }
+</style>
+{% endblock %}

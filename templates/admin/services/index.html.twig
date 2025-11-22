@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Services - Admin{% endblock %}
+
+{% block body %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'admin/components/_sidebar.html.twig' %}
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-scissors text-gold"></i> Gestion des Services
+                </h1>
+                <a href="{{ path('admin_service_new') }}" class="btn btn-gold">
+                    <i class="bi bi-plus-circle"></i> Nouveau Service
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    {% if services|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Nom</th>
+                                    <th>Description</th>
+                                    <th>Catégorie</th>
+                                    <th>Prix</th>
+                                    <th>Durée</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in services %}
+                                <tr>
+                                    <td>
+                                        {% if service.image %}
+                                        <img src="{{ asset('uploads/services/' ~ service.image.path) }}" 
+                                             alt="{{ service.name }}"
+                                             class="img-thumbnail"
+                                             style="width: 80px; height: 80px; object-fit: cover;">
+                                        {% else %}
+                                        <div class="bg-dark rounded d-flex align-items-center justify-content-center"
+                                             style="width: 80px; height: 80px;">
+                                            <i class="bi bi-image text-gold"></i>
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                    <td><strong>{{ service.name }}</strong></td>
+                                    <td>
+                                        <small>
+                                            {% if service.description|length > 60 %}
+                                                {{ service.description|slice(0, 60) }}...
+                                            {% else %}
+                                                {{ service.description }}
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        {% if service.category %}
+                                        <span class="badge bg-secondary">{{ service.category.name }}</span>
+                                        {% else %}
+                                        <span class="badge bg-warning text-dark">Aucune</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><strong class="text-gold">{{ service.price }} €</strong></td>
+                                    <td>{{ service.duration }} min</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{{ path('admin_service_edit', {id: service.id}) }}" 
+                                               class="btn btn-warning" 
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form method="post" 
+                                                  action="{{ path('admin_service_delete', {id: service.id}) }}" 
+                                                  style="display: inline;"
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce service ?');">
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Supprimer">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center text-muted mb-0">
+                        <i class="bi bi-info-circle"></i> Aucun service trouvé. 
+                        <a href="{{ path('admin_service_new') }}" class="text-gold">Créez votre premier service</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .sidebar {
+        background-color: var(--black) !important;
+    }
+    
+    .sidebar .nav-link {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+    }
+    
+    .sidebar .nav-link.active {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+        color: var(--gold) !important;
+    }
+</style>
+{% endblock %}

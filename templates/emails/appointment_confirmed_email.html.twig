@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); color: #FFD700; padding: 30px; text-center; }
+        .content { background: #f8f9fa; padding: 30px; }
+        .success-badge { background: #28a745; color: white; padding: 15px; border-radius: 10px; text-align: center; margin: 20px 0; }
+        .info-box { background: white; border-left: 4px solid #FFD700; padding: 15px; margin: 20px 0; }
+        .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        .highlight { color: #FFD700; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✂️ Salon Luxe</h1>
+            <p>Rendez-vous Confirmé</p>
+        </div>
+        
+        <div class="content">
+            <div class="success-badge">
+                <h2 style="margin: 0;">✅ Votre rendez-vous est confirmé !</h2>
+            </div>
+            
+            <h2>Bonjour {{ appointment.clientName }},</h2>
+            
+            <p>Excellente nouvelle ! Votre rendez-vous au <strong class="highlight">Salon Luxe</strong> a été confirmé.</p>
+            
+            <div class="info-box">
+                <h3 style="color: #FFD700; margin-top: 0;">📅 Détails de votre rendez-vous</h3>
+                <p><strong>Service :</strong> {{ appointment.service.name }}</p>
+                <p><strong>Date :</strong> {{ appointment.appointmentDate|date('l d F Y', 'fr') }}</p>
+                <p><strong>Heure :</strong> {{ appointment.appointmentTime|date('H:i') }}</p>
+                <p><strong>Durée estimée :</strong> {{ appointment.service.duration }} minutes</p>
+                <p><strong>Prix :</strong> {{ appointment.service.price }} €</p>
+                {% if appointment.notes %}
+                <p><strong>Vos notes :</strong> {{ appointment.notes }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="info-box" style="border-left-color: #28a745;">
+                <h4 style="color: #28a745; margin-top: 0;">📍 Où nous trouver</h4>
+                <p>
+                    <strong>Salon Luxe</strong><br>
+                    123 Rue de la Beauté<br>
+                    75001 Paris<br>
+                    <strong>Tél :</strong> +33 1 23 45 67 89
+                </p>
+            </div>
+            
+            <div class="info-box" style="border-left-color: #17a2b8;">
+                <h4 style="color: #17a2b8; margin-top: 0;">💡 Conseils pratiques</h4>
+                <ul>
+                    <li>Merci d'arriver <strong>5 minutes avant</strong> l'heure prévue</li>
+                    <li>En cas d'empêchement, <strong>prévenez-nous au moins 24h à l'avance</strong></li>
+                    <li>N'hésitez pas à nous faire part de vos préférences lors de votre visite</li>
+                </ul>
+            </div>
+            
+            <p style="text-align: center; margin-top: 30px;">
+                <strong>Nous avons hâte de vous accueillir ! 💛</strong>
+            </p>
+            
+            <p style="text-align: center; font-size: 12px; color: #666;">
+                Pour toute question, contactez-nous au +33 1 23 45 67 89<br>
+                ou par email à contact@salonluxe.fr
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>Salon Luxe - 123 Rue de la Beauté, 75001 Paris<br>
+            © 2024 Salon Luxe. Tous droits réservés.</p>
+        </div>
+    </div>
+</body>
+</html>
