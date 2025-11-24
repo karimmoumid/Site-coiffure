@@ -53,12 +53,8 @@ class ServiceController extends AbstractController
                         $newFilename
                     );
                     
-                    $image = new Image();
-                    $image->setPath($newFilename);
-                    $image->setAlt($service->getName());
-                    $em->persist($image);
                     
-                    $service->setImage($image);
+                    $service->setImage($newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
                 }
@@ -102,26 +98,22 @@ class ServiceController extends AbstractController
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
 
                 try {
-                    // Supprimer l'ancienne image si elle existe
-                    if ($service->getImage()) {
-                        $oldImagePath = $this->getParameter('services_images_directory').'/'.$service->getImage()->getPath();
-                        if (file_exists($oldImagePath)) {
-                            unlink($oldImagePath);
-                        }
-                        $em->remove($service->getImage());
-                    }
+                    // Supprimer l'ancienne image si existante
+        if ($service->getImage()) {
+            $oldImagePath = $this->getParameter('services_images_directory') . '/' . $service->getImage();
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
 
-                    $imageFile->move(
-                        $this->getParameter('services_images_directory'),
-                        $newFilename
-                    );
-                    
-                    $image = new Image();
-                    $image->setPath($newFilename);
-                    $image->setAlt($service->getName());
-                    $em->persist($image);
-                    
-                    $service->setImage($image);
+        // Déplacer le nouveau fichier
+        $imageFile->move(
+            $this->getParameter('services_images_directory'),
+            $newFilename
+        );
+
+        // Mettre à jour la propriété image avec le nom du fichier
+        $service->setImage($newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
                 }
@@ -152,13 +144,24 @@ class ServiceController extends AbstractController
         }
 
         // Supprimer l'image associée
-        if ($service->getImage()) {
-            $imagePath = $this->getParameter('services_images_directory').'/'.$service->getImage()->getPath();
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
-            $em->remove($service->getImage());
-        }
+         if ($service->getImages()) {
+            foreach ($service->getImages() as $image) {
+    $imagePath = $this->getParameter('services_images_directory') . '/' . $image->getName();
+    if (file_exists($imagePath)) {
+        unlink($imagePath);
+    }
+    $em->remove($image);
+}
+$image = $service->getImage();
+if ($image) {
+    // Récupérer le nom du fichier
+    $imagePath = $this->getParameter('services_images_directory') . '/' . $image;
+
+    // Supprimer le fichier si il existe
+    if (file_exists($imagePath)) {
+        unlink($imagePath);
+    }
+}
 
         $em->remove($service);
         $em->flush();
@@ -166,4 +169,5 @@ class ServiceController extends AbstractController
         $this->addFlash('success', 'Service supprimé avec succès !');
         return $this->redirectToRoute('admin_services');
     }
+}
 }

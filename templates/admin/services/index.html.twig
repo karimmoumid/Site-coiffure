@@ -6,7 +6,7 @@
 <div class="container-fluid my-4">
     <div class="row">
         <!-- Sidebar -->
-        {% include 'admin/components/_sidebar.html.twig' %}
+        {% include 'admin/components/sidebar.html.twig' %}
 
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -40,7 +40,7 @@
                                 <tr>
                                     <td>
                                         {% if service.image %}
-                                        <img src="{{ asset('uploads/services/' ~ service.image.path) }}" 
+                                        <img src="{{ asset('uploads/services/' ~ service.image) }}" 
                                              alt="{{ service.name }}"
                                              class="img-thumbnail"
                                              style="width: 80px; height: 80px; object-fit: cover;">
@@ -54,22 +54,22 @@
                                     <td><strong>{{ service.name }}</strong></td>
                                     <td>
                                         <small>
-                                            {% if service.description|length > 60 %}
-                                                {{ service.description|slice(0, 60) }}...
+                                            {% if service.smallDescription|length > 60 %}
+                                                {{ service.smallDescription|slice(0, 60) }}...
                                             {% else %}
-                                                {{ service.description }}
+                                                {{ service.smallDescription }}
                                             {% endif %}
                                         </small>
                                     </td>
                                     <td>
-                                        {% if service.category %}
-                                        <span class="badge bg-secondary">{{ service.category.name }}</span>
+                                        {% if service.serviceCategory %}
+                                        <span class="badge bg-secondary">{{ service.serviceCategory.name }}</span>
                                         {% else %}
                                         <span class="badge bg-warning text-dark">Aucune</span>
                                         {% endif %}
                                     </td>
                                     <td><strong class="text-gold">{{ service.price }} €</strong></td>
-                                    <td>{{ service.duration }} min</td>
+                                    <td>{{ service.time }} min</td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
                                             <a href="{{ path('admin_service_edit', {id: service.id}) }}" 

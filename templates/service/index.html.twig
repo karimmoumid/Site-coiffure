@@ -18,7 +18,7 @@
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm">
                 {% if category.image %}
-                <img src="{{ asset('uploads/categories/' ~ category.image.path) }}" 
+                <img src="{{ asset('uploads/categories/' ~ category.image) }}" 
                      class="card-img-top" 
                      alt="{{ category.name }}"
                      style="height: 250px; object-fit: cover;">
@@ -33,7 +33,7 @@
                     <h3 class="card-title text-gold h4">
                         <i class="bi bi-bookmark-star-fill"></i> {{ category.name }}
                     </h3>
-                    <p class="card-text text-muted">{{ category.description }}</p>
+                    <p class="card-text text-muted">{{ category.smallDescription }}</p>
                     
                     {% if category.services|length > 0 %}
                     <div class="mt-3">

@@ -6,7 +6,7 @@
 <div class="container-fluid my-4">
     <div class="row">
         <!-- Sidebar -->
-        {% include 'admin/components/_sidebar.html.twig' %}
+        {% include 'admin/components/sidebar.html.twig' %}
 
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -29,7 +29,7 @@
                             {% if service.image %}
                             <div class="mb-4 text-center">
                                 <p class="text-muted mb-2">Image actuelle :</p>
-                                <img src="{{ asset('uploads/services/' ~ service.image.path) }}" 
+                                <img src="{{ asset('uploads/services/' ~ service.image) }}" 
                                      alt="{{ service.name }}"
                                      class="img-thumbnail"
                                      style="max-width: 300px; max-height: 300px; object-fit: cover;">
@@ -59,24 +59,32 @@
                                     <label class="form-label fw-bold">
                                         <i class="bi bi-clock"></i> Durée (minutes) <span class="text-danger">*</span>
                                     </label>
-                                    {{ form_widget(form.duration) }}
-                                    {{ form_errors(form.duration) }}
+                                    {{ form_widget(form.time) }}
+                                    {{ form_errors(form.time) }}
                                 </div>
                                 
                                 <div class="col-12">
                                     <label class="form-label fw-bold">
                                         <i class="bi bi-bookmark"></i> Catégorie
                                     </label>
-                                    {{ form_widget(form.category) }}
-                                    {{ form_errors(form.category) }}
+                                    {{ form_widget(form.service_category) }}
+                                    {{ form_errors(form.service_category) }}
                                 </div>
                                 
                                 <div class="col-12">
                                     <label class="form-label fw-bold">
                                         <i class="bi bi-text-left"></i> Description <span class="text-danger">*</span>
                                     </label>
-                                    {{ form_widget(form.description) }}
-                                    {{ form_errors(form.description) }}
+                                    {{ form_widget(form.complet_description) }}
+                                    {{ form_errors(form.complet_description) }}
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-text-left"></i> Résumé du service <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form_widget(form.small_description) }}
+                                    {{ form_errors(form.small_description) }}
                                 </div>
                                 
                                 <div class="col-12">

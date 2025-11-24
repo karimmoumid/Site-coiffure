@@ -12,13 +12,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/appointments')]
-#[IsGranted('ROLE_ADMIN', 'ROLE_EMPLOYEE')]
+#[IsGranted('ROLE_EMPLOYEE')]
 class AppointmentController extends AbstractController
 {
     #[Route('/', name: 'admin_appointments')]
     public function index(AppointementRepository $repository): Response
     {
-        $appointments = $repository->findBy([], ['appointmentDate' => 'DESC', 'appointmentTime' => 'DESC']);
+        $appointments = $repository->findBy([], ['date_hour' => 'DESC']);
         
         return $this->render('admin/appointments/index.html.twig', [
             'appointments' => $appointments,

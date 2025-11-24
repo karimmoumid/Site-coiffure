@@ -41,7 +41,7 @@ class DashboardController extends AbstractController
         // Prochains rendez-vous confirmés
         $upcomingAppointments = $appointmentRepo->findBy(
             ['status' => 'confirmed'],
-            ['appointmentDate' => 'ASC'],
+            ['date_hour' => 'ASC'],
             5
         );
         

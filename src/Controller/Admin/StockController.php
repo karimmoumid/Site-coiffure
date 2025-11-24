@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/stock')]
-#[IsGranted('ROLE_ADMIN', 'ROLE_EMPLOYEE')]
+#[IsGranted('ROLE_EMPLOYEE')]
 class StockController extends AbstractController
 {
     #[Route('/', name: 'admin_stock')]

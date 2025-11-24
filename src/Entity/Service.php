@@ -31,6 +31,9 @@ class Service
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $time = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $image = null;
+
     #[ORM\ManyToOne(targetEntity: ServiceCategory::class, inversedBy: 'services')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ServiceCategory $service_category = null;
@@ -47,9 +50,6 @@ class Service
     #[ORM\ManyToMany(targetEntity: Appointement::class, mappedBy: 'services')]
     private Collection $appointements;
 
-    #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Image $mainImage = null;
 
     public function __construct()
     {
@@ -115,6 +115,18 @@ class Service
     public function setTime(string $time): static
     {
         $this->time = $time;
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
         return $this;
     }
 
@@ -194,30 +206,6 @@ class Service
         return $this;
     }
 
-    public function getMainImage(): ?Image
-    {
-        return $this->mainImage;
-    }
-
-    public function setMainImage(?Image $mainImage): static
-    {
-        $this->mainImage = $mainImage;
-        return $this;
-    }
-
-    public function getImage(): ?Image
-    {
-        // Retourne l'image principale ou la première image si pas d'image principale
-        if ($this->mainImage) {
-            return $this->mainImage;
-        }
-        
-        if (!$this->images->isEmpty()) {
-            return $this->images->first();
-        }
-        
-        return null;
-    }
 
     /**
      * Méthode pour l'affichage dans les formulaires

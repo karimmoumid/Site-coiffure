@@ -132,13 +132,17 @@
                                         {% for appointment in pending_appointments %}
                                         <tr>
                                             <td>
-                                                <strong>{{ appointment.clientName }}</strong><br>
-                                                <small class="text-muted">{{ appointment.clientEmail }}</small>
+                                                <strong>{{ appointment.name }}</strong><br>
+                                                <small class="text-muted">{{ appointment.email }}</small>
                                             </td>
-                                            <td>{{ appointment.service.name }}</td>
                                             <td>
-                                                <i class="bi bi-calendar"></i> {{ appointment.appointmentDate|date('d/m/Y') }}<br>
-                                                <i class="bi bi-clock"></i> {{ appointment.appointmentTime|date('H:i') }}
+                                                {% for service in appointment.services %}
+                                                    {{ service.name }}{% if not loop.last %}, {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                <i class="bi bi-calendar"></i> {{ appointment.dateHour|date('d/m/Y') }}<br>
+                                                <i class="bi bi-clock"></i> {{ appointment.dateHour|date('H:i') }}
                                             </td>
                                             <td>{{ appointment.createdAt|date('d/m/Y H:i') }}</td>
                                             <td>

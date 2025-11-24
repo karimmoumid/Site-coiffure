@@ -29,8 +29,18 @@ class ServiceFormType extends AbstractType
                     new NotBlank(['message' => 'Le nom est requis']),
                 ],
             ])
-            ->add('description', TextareaType::class, [
+            ->add('complet_description', TextareaType::class, [
                 'label' => 'Description',
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 5
+                ],
+                'constraints' => [
+                    new NotBlank(['message' => 'La description est requise']),
+                ],
+            ])
+            ->add('small_description', TextareaType::class, [
+                'label' => 'résumé du service',
                 'attr' => [
                     'class' => 'form-control',
                     'rows' => 5
@@ -47,7 +57,7 @@ class ServiceFormType extends AbstractType
                     new Positive(['message' => 'Le prix doit être positif']),
                 ],
             ])
-            ->add('duration', IntegerType::class, [
+            ->add('time', IntegerType::class, [
                 'label' => 'Durée (minutes)',
                 'attr' => ['class' => 'form-control'],
                 'constraints' => [
@@ -55,7 +65,7 @@ class ServiceFormType extends AbstractType
                     new Positive(['message' => 'La durée doit être positive']),
                 ],
             ])
-            ->add('category', EntityType::class, [
+            ->add('service_category', EntityType::class, [
                 'class' => ServiceCategory::class,
                 'choice_label' => 'name',
                 'label' => 'Catégorie',

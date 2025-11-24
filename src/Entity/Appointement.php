@@ -40,6 +40,9 @@ class Appointement
     #[ORM\Column(length: 50)]
     private ?string $status = 'pending';
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     /**
      * @var Collection<int, Service>
      */
@@ -51,6 +54,7 @@ class Appointement
         $this->services = new ArrayCollection();
         $this->confirmed = false;
         $this->status = 'pending';
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -148,6 +152,17 @@ class Appointement
         return $this;
     }
 
+        public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+        public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+    
     /**
      * @return Collection<int, Service>
      */

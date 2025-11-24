@@ -9,10 +9,10 @@
             <ol class="breadcrumb text-white">
                 <li class="breadcrumb-item"><a href="{{ path('app_home') }}" class="text-gold">Accueil</a></li>
                 <li class="breadcrumb-item"><a href="{{ path('app_services') }}" class="text-gold">Services</a></li>
-                {% if service.category %}
+                {% if service.serviceCategory %}
                 <li class="breadcrumb-item">
-                    <a href="{{ path('app_service_category', {id: service.category.id}) }}" class="text-gold">
-                        {{ service.category.name }}
+                    <a href="{{ path('app_service_category', {id: service.serviceCategory.id}) }}" class="text-gold">
+                        {{ service.serviceCategory.name }}
                     </a>
                 </li>
                 {% endif %}
@@ -28,7 +28,7 @@
         <!-- Image et informations principales -->
         <div class="col-lg-6">
             {% if service.image %}
-            <img src="{{ asset('uploads/services/' ~ service.image.path) }}" 
+            <img src="{{ asset('uploads/services/' ~ service.image) }}" 
                  class="img-fluid rounded shadow-lg w-100" 
                  alt="{{ service.name }}"
                  style="max-height: 500px; object-fit: cover;">
@@ -48,27 +48,27 @@
                         <span class="badge badge-gold fs-3">{{ service.price }} €</span>
                     </div>
                     
-                    {% if service.category %}
+                    {% if service.serviceCategory %}
                     <p class="text-muted mb-3">
                         <i class="bi bi-bookmark"></i> 
                         Catégorie : 
-                        <a href="{{ path('app_service_category', {id: service.category.id}) }}" 
+                        <a href="{{ path('app_service_category', {id: service.serviceCategory.id}) }}" 
                            class="text-gold text-decoration-none">
-                            {{ service.category.name }}
+                            {{ service.serviceCategory.name }}
                         </a>
                     </p>
                     {% endif %}
                     
                     <div class="mb-4">
                         <span class="badge bg-dark fs-5">
-                            <i class="bi bi-clock"></i> Durée : {{ service.duration }} minutes
+                            <i class="bi bi-clock"></i> Durée : {{ service.time }} minutes
                         </span>
                     </div>
                     
                     <h4 class="text-black mb-3">
                         <i class="bi bi-text-left"></i> Description
                     </h4>
-                    <p class="lead">{{ service.description }}</p>
+                    <p class="lead">{{ service.completDescription }}</p>
                     
                     <hr class="my-4">
                     
@@ -76,8 +76,8 @@
                         <a href="{{ path('app_appointment') }}" class="btn btn-gold btn-lg">
                             <i class="bi bi-calendar-plus"></i> Réserver ce service
                         </a>
-                        {% if service.category %}
-                        <a href="{{ path('app_service_category', {id: service.category.id}) }}" 
+                        {% if service.serviceCategory %}
+                        <a href="{{ path('app_service_category', {id: service.serviceCategory.id}) }}" 
                            class="btn btn-black">
                             <i class="bi bi-arrow-left"></i> Retour à la catégorie
                         </a>
@@ -93,17 +93,17 @@
     </div>
     
     <!-- Services similaires (même catégorie) -->
-    {% if service.category and service.category.services|length > 1 %}
+    {% if service.serviceCategory and service.serviceCategory.services|length > 1 %}
     <section class="mt-5">
         <h3 class="text-center section-title">Services similaires</h3>
         
         <div class="row g-4 mt-4">
-            {% for similar in service.category.services %}
+            {% for similar in service.serviceCategory.services %}
                 {% if similar.id != service.id %}
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100">
                         {% if similar.image %}
-                        <img src="{{ asset('uploads/services/' ~ similar.image.path) }}" 
+                        <img src="{{ asset('uploads/services/' ~ similar.image) }}" 
                              class="card-img-top" 
                              alt="{{ similar.name }}"
                              style="height: 180px; object-fit: cover;">
@@ -120,10 +120,10 @@
                                 <span class="badge badge-gold">{{ similar.price }}€</span>
                             </div>
                             <p class="card-text small">
-                                {% if similar.description|length > 60 %}
-                                    {{ similar.description|slice(0, 60) }}...
+                                {% if similar.smallDescription|length > 60 %}
+                                    {{ similar.smallDescription|slice(0, 60) }}...
                                 {% else %}
-                                    {{ similar.description }}
+                                    {{ similar.smallDescription }}
                                 {% endif %}
                             </p>
                         </div>

@@ -37,7 +37,8 @@ class ServiceCategoryController extends AbstractController
         if ($request->isMethod('POST')) {
             $category = new ServiceCategory();
             $category->setName($request->request->get('name'));
-            $category->setDescription($request->request->get('description'));
+            $category->setCompletDescription($request->request->get('completDescription'));
+            $category->setSmallDescription($request->request->get('smallDescription'));
             
             // Gestion de l'upload d'image
             $imageFile = $request->files->get('image');
@@ -52,12 +53,7 @@ class ServiceCategoryController extends AbstractController
                         $newFilename
                     );
                     
-                    $image = new Image();
-                    $image->setPath($newFilename);
-                    $image->setAlt($category->getName());
-                    $em->persist($image);
-                    
-                    $category->setImage($image);
+                    $category->setImage($newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
                 }
@@ -70,7 +66,7 @@ class ServiceCategoryController extends AbstractController
             return $this->redirectToRoute('admin_service_categories');
         }
         
-        return $this->render('admin/categories/new.html.twig');
+        return $this->render('admin/categories/index.html.twig');
     }
 
     #[Route('/{id}/edit', name: 'admin_service_category_edit', methods: ['GET', 'POST'])]
@@ -89,40 +85,39 @@ class ServiceCategoryController extends AbstractController
         
         if ($request->isMethod('POST')) {
             $category->setName($request->request->get('name'));
-            $category->setDescription($request->request->get('description'));
+            $category->setCompletDescription($request->request->get('completDescription'));
+            $category->setSmallDescription($request->request->get('smallDescription'));
             
             // Gestion de l'upload d'image
             $imageFile = $request->files->get('image');
-            if ($imageFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+           if ($imageFile) {
+    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+    $safeFilename = $slugger->slug($originalFilename);
+    $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
 
-                try {
-                    // Supprimer l'ancienne image
-                    if ($category->getImage()) {
-                        $oldImagePath = $this->getParameter('categories_images_directory').'/'.$category->getImage()->getPath();
-                        if (file_exists($oldImagePath)) {
-                            unlink($oldImagePath);
-                        }
-                        $em->remove($category->getImage());
-                    }
-
-                    $imageFile->move(
-                        $this->getParameter('categories_images_directory'),
-                        $newFilename
-                    );
-                    
-                    $image = new Image();
-                    $image->setPath($newFilename);
-                    $image->setAlt($category->getName());
-                    $em->persist($image);
-                    
-                    $category->setImage($image);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
-                }
+    try {
+        // Supprimer l'ancienne image si existante
+        if ($category->getImage()) {
+            $oldImagePath = $this->getParameter('categories_images_directory') . '/' . $category->getImage();
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
             }
+        }
+
+        // Déplacer le nouveau fichier
+        $imageFile->move(
+            $this->getParameter('categories_images_directory'),
+            $newFilename
+        );
+
+        // Mettre à jour la propriété image avec le nom du fichier
+        $category->setImage($newFilename);
+
+    } catch (FileException $e) {
+        $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
+    }
+}
+
             
             $em->flush();
             
@@ -154,13 +149,27 @@ class ServiceCategoryController extends AbstractController
         }
         
         // Supprimer l'image associée
-        if ($category->getImage()) {
-            $imagePath = $this->getParameter('categories_images_directory').'/'.$category->getImage()->getPath();
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
-            $em->remove($category->getImage());
+        if ($category->getImages()) {
+            foreach ($category->getImages() as $image) {
+    $imagePath = $this->getParameter('categories_images_directory') . '/' . $image->getName();
+    if (file_exists($imagePath)) {
+        unlink($imagePath);
+    }
+    $em->remove($image);
+}
+
         }
+
+        $image = $category->getImage();
+if ($image) {
+    // Récupérer le nom du fichier
+    $imagePath = $this->getParameter('categories_images_directory') . '/' . $image;
+
+    // Supprimer le fichier si il existe
+    if (file_exists($imagePath)) {
+        unlink($imagePath);
+    }
+}
         
         $em->remove($category);
         $em->flush();
