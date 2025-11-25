@@ -45,7 +45,7 @@ class AppointmentController extends AbstractController
         try {
             $email = (new Email())
                 ->from('noreply@salonluxe.fr')
-                ->to($appointment->getClientEmail())
+                ->to($appointment->getEmail())
                 ->subject('Rendez-vous confirmé - Salon Luxe')
                 ->html($this->renderView('emails/appointment_confirmed.html.twig', [
                     'appointment' => $appointment,
@@ -54,6 +54,7 @@ class AppointmentController extends AbstractController
             $mailer->send($email);
         } catch (\Exception $e) {
             // Log l'erreur
+            dd('Erreur envoi email: '.$e->getMessage());
         }
         
         $this->addFlash('success', 'Rendez-vous confirmé avec succès !');
@@ -81,7 +82,7 @@ class AppointmentController extends AbstractController
         try {
             $email = (new Email())
                 ->from('noreply@salonluxe.fr')
-                ->to($appointment->getClientEmail())
+                ->to($appointment->getEmail())
                 ->subject('Rendez-vous annulé - Salon Luxe')
                 ->html($this->renderView('emails/appointment_cancelled.html.twig', [
                     'appointment' => $appointment,

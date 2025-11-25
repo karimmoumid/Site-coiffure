@@ -199,16 +199,31 @@
                                         {% for appointment in upcoming_appointments %}
                                         <tr>
                                             <td>
-                                                <strong>{{ appointment.clientName }}</strong><br>
-                                                <small class="text-muted">{{ appointment.clientPhone }}</small>
+                                                <strong>{{ appointment.name }}</strong><br>
                                             </td>
-                                            <td>{{ appointment.service.name }}</td>
                                             <td>
-                                                <i class="bi bi-calendar"></i> {{ appointment.appointmentDate|date('d/m/Y') }}<br>
-                                                <i class="bi bi-clock"></i> {{ appointment.appointmentTime|date('H:i') }}
+                                                {% for service in appointment.services %}
+                                                    {{ service.name }}{% if not loop.last %}, {% endif %}
+                                                {% endfor %}
                                             </td>
-                                            <td>{{ appointment.service.duration }} min</td>
-                                            <td><strong>{{ appointment.service.price }} €</strong></td>
+                                            <td>
+                                                <i class="bi bi-calendar"></i> {{ appointment.dateHour|date('d/m/Y') }}<br>
+                                                <i class="bi bi-clock"></i> {{ appointment.dateHour|date('H:i') }}
+                                            </td>
+                                            <td>
+                                                {% set totalTime = 0 %}
+                                                {% for service in appointment.services %}
+                                                    {% set totalTime = totalTime + service.time %}
+                                                {% endfor %}
+                                                {{ totalTime }} min
+                                            </td>
+                                            <td>
+                                                {% set totalPrice = 0 %}
+                                                {% for service in appointment.services %}
+                                                    {% set totalPrice = totalPrice + service.price %}
+                                                {% endfor %}
+                                                <strong>{{ totalPrice }} €</strong>
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>

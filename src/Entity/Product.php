@@ -18,15 +18,18 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::INTEGER)]
-    private ?int $lot_number = null;
-
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $dlc = null;
-
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ProductCategory $product_category = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column]
+    private ?int $quantity = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $price = null;
 
     public function getId(): ?int
     {
@@ -45,29 +48,6 @@ class Product
         return $this;
     }
 
-    public function getLotNumber(): ?int
-    {
-        return $this->lot_number;
-    }
-
-    public function setLotNumber(int $lot_number): static
-    {
-        $this->lot_number = $lot_number;
-        return $this;
-    }
-
-    public function getDlc(): ?\DateTimeImmutable
-    {
-        return $this->dlc;
-    }
-
-    public function setDlc(\DateTimeImmutable $dlc): static
-    {
-        $this->dlc = $dlc;
-
-        return $this;
-    }
-
     public function getProductCategory(): ?ProductCategory
     {
         return $this->product_category;
@@ -76,6 +56,42 @@ class Product
     public function setProductCategory(?ProductCategory $product_category): static
     {
         $this->product_category = $product_category;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): static
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    public function setPrice(string $price): static
+    {
+        $this->price = $price;
 
         return $this;
     }

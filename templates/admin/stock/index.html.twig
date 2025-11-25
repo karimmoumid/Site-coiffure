@@ -97,8 +97,8 @@
                                         <small>{{ product.description }}</small>
                                     </td>
                                     <td>
-                                        {% if product.category %}
-                                        <span class="badge bg-secondary">{{ product.category.name }}</span>
+                                        {% if product.productCategory %}
+                                        <span class="badge bg-secondary">{{ product.productCategory.name }}</span>
                                         {% else %}
                                         <span class="badge bg-warning text-dark">Aucune</span>
                                         {% endif %}

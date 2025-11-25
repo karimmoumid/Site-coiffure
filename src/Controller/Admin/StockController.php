@@ -54,7 +54,7 @@ class StockController extends AbstractController
         if ($categoryId) {
             $category = $categoryRepo->find($categoryId);
             if ($category) {
-                $product->setCategory($category);
+                $product->setProductCategory($category);
             }
         }
         

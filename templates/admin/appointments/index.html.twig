@@ -58,21 +58,30 @@
                                 <tr data-status="{{ appointment.status }}">
                                     <td>#{{ appointment.id }}</td>
                                     <td>
-                                        <strong>{{ appointment.clientName }}</strong>
+                                        <strong>{{ appointment.name }}</strong>
                                     </td>
                                     <td>
                                         <small>
-                                            <i class="bi bi-envelope"></i> {{ appointment.clientEmail }}<br>
-                                            <i class="bi bi-telephone"></i> {{ appointment.clientPhone }}
+                                            <i class="bi bi-envelope"></i> {{ appointment.email }}<br>
                                         </small>
                                     </td>
                                     <td>
-                                        <strong>{{ appointment.service.name }}</strong><br>
-                                        <small class="text-muted">{{ appointment.service.duration }} min - {{ appointment.service.price }}€</small>
+                                        {% if appointment.services is defined %}
+                                            {% for service in appointment.services %}
+                                                <strong>{{ service.name }}</strong><br>
+                                                <small class="text-muted">
+                                                    {{ service.time }} min — {{ service.price }} €
+                                                </small>
+                                                {% if not loop.last %}<hr>{% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted">Aucun service lié</span>
+                                        {% endif %}
                                     </td>
+
                                     <td>
-                                        <i class="bi bi-calendar"></i> {{ appointment.appointmentDate|date('d/m/Y') }}<br>
-                                        <i class="bi bi-clock"></i> {{ appointment.appointmentTime|date('H:i') }}
+                                        <i class="bi bi-calendar"></i> {{ appointment.dateHour|date('d/m/Y') }}<br>
+                                        <i class="bi bi-clock"></i> {{ appointment.dateHour|date('H:i') }}
                                     </td>
                                     <td>
                                         {% if appointment.status == 'pending' %}
@@ -119,10 +128,10 @@
                                         </div>
                                     </td>
                                 </tr>
-                                {% if appointment.notes %}
+                                {% if appointment.comment %}
                                 <tr data-status="{{ appointment.status }}" class="table-info">
                                     <td colspan="8">
-                                        <small><strong>Note:</strong> {{ appointment.notes }}</small>
+                                        <small><strong>Note:</strong> {{ appointment.comment }}</small>
                                     </td>
                                 </tr>
                                 {% endif %}

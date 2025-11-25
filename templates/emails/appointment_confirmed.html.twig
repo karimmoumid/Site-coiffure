@@ -38,7 +38,7 @@
                 <p><strong>Prix :</strong> {{ service.getPrice() }} €</p>
                 <hr>
                 {% endfor %}
-                <p><strong>Date :</strong> {{ appointment.dateHour|date('l d F Y', 'fr') }}</p>
+                <p><strong>Date :</strong> {{ appointment.dateHour|date('l d F Y', 'Europe/Paris') }}</p>
                 <p><strong>Heure :</strong> {{ appointment.dateHour|date('H:i') }}</p>
                 {% if appointment.comment %}
                     <p><strong>Vos notes :</strong> {{ appointment.comment }}</p>
