@@ -1,0 +1,246 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Utilisateurs - Admin{% endblock %}
+
+{% block body %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'admin/components/sidebar.html.twig' %}
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-people text-gold"></i> Gestion des Utilisateurs
+                </h1>
+                <a href="{{ path('admin_user_new') }}" class="btn btn-gold">
+                    <i class="bi bi-person-plus"></i> Nouvel Utilisateur
+                </a>
+            </div>
+
+            <!-- Onglets par type d'utilisateur -->
+            <ul class="nav nav-tabs mb-4" id="userTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button">
+                        <i class="bi bi-people"></i> Tous <span class="badge bg-dark">{{ all_users|length }}</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="admins-tab" data-bs-toggle="tab" data-bs-target="#admins" type="button">
+                        <i class="bi bi-shield-lock"></i> Administrateurs <span class="badge bg-danger">{{ admins|length }}</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employees" type="button">
+                        <i class="bi bi-briefcase"></i> Employés <span class="badge bg-warning text-dark">{{ employees|length }}</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button">
+                        <i class="bi bi-person"></i> Utilisateurs <span class="badge bg-info">{{ regular_users|length }}</span>
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Contenu des onglets -->
+            <div class="tab-content" id="userTabsContent">
+                <!-- Tous les utilisateurs -->
+                <div class="tab-pane fade show active" id="all" role="tabpanel">
+                    {{ _self.userTable(all_users, 'all') }}
+                </div>
+                
+                <!-- Administrateurs -->
+                <div class="tab-pane fade" id="admins" role="tabpanel">
+                    {{ _self.userTable(admins, 'admin') }}
+                </div>
+                
+                <!-- Employés -->
+                <div class="tab-pane fade" id="employees" role="tabpanel">
+                    {{ _self.userTable(employees, 'employee') }}
+                </div>
+                
+                <!-- Utilisateurs standard -->
+                <div class="tab-pane fade" id="users" role="tabpanel">
+                    {{ _self.userTable(regular_users, 'user') }}
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+{% macro userTable(users, type) %}
+    {% if users|length > 0 %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Rôles</th>
+                            <th>Date de création</th>
+                            <th>Dernière connexion</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr {% if app.user == user %}class="table-primary"{% endif %}>
+                            <td>#{{ user.id }}</td>
+                            <td>
+                                <strong>{{ user.name }}</strong>
+                                {% if app.user == user %}
+                                <span class="badge bg-success ms-2">Vous</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if 'ROLE_ADMIN' in user.roles %}
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-shield-lock"></i> Admin
+                                    </span>
+                                {% endif %}
+                                {% if 'ROLE_EMPLOYEE' in user.roles and 'ROLE_ADMIN' not in user.roles %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-briefcase"></i> Employé
+                                    </span>
+                                {% endif %}
+                                {% if 'ROLE_ADMIN' not in user.roles and 'ROLE_EMPLOYEE' not in user.roles %}
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-person"></i> Utilisateur
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.createdAt %}
+                                    {{ user.createdAt|date('d/m/Y H:i') }}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.lastLoginAt %}
+                                    {{ user.lastLoginAt|date('d/m/Y H:i') }}
+                                {% else %}
+                                    <span class="text-muted">Jamais</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if app.user != user %}
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{{ path('admin_user_edit', {id: user.id}) }}" 
+                                       class="btn btn-warning" 
+                                       title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" 
+                                            class="btn btn-danger" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ user.id }}"
+                                            title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Modal de confirmation de suppression -->
+                                <div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title">
+                                                    <i class="bi bi-exclamation-triangle"></i> Confirmation de suppression
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ user.name }}</strong> ?</p>
+                                                <p class="text-danger mb-0">
+                                                    <i class="bi bi-info-circle"></i> Cette action est irréversible.
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    <i class="bi bi-x"></i> Annuler
+                                                </button>
+                                                <form method="post" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash"></i> Supprimer
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle"></i> 
+        {% if type == 'admin' %}
+            Aucun administrateur trouvé.
+        {% elseif type == 'employee' %}
+            Aucun employé trouvé.
+        {% elseif type == 'user' %}
+            Aucun utilisateur standard trouvé.
+        {% else %}
+            Aucun utilisateur trouvé.
+        {% endif %}
+    </div>
+    {% endif %}
+{% endmacro %}
+
+<style>
+    .sidebar {
+        background-color: var(--black) !important;
+    }
+    
+    .sidebar .nav-link {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+    }
+    
+    .sidebar .nav-link.active {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+        color: var(--gold) !important;
+    }
+    
+    .nav-tabs .nav-link {
+        color: var(--dark-gray);
+        border: none;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        border-bottom-color: var(--gold);
+        color: var(--gold);
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: var(--gold);
+        border-bottom-color: var(--gold);
+        background: transparent;
+    }
+</style>
+{% endblock %}

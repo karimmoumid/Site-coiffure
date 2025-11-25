@@ -5,10 +5,12 @@
         </h5>
         <ul class="nav flex-column">
             <li class="nav-item">
+            {% if is_granted('ROLE_ADMIN') %}
                 <a class="nav-link {{ app.request.get('_route') == 'admin_dashboard' ? 'active' : '' }} text-white" 
                    href="{{ path('admin_dashboard') }}">
                     <i class="bi bi-house-door"></i> Dashboard
                 </a>
+             {% endif %}   
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ app.request.get('_route') starts with 'admin_appointment' ? 'active' : '' }} text-white" 
@@ -17,22 +19,36 @@
                 </a>
             </li>
             <li class="nav-item">
+            {% if is_granted('ROLE_ADMIN') %}
                 <a class="nav-link {{ app.request.get('_route') starts with 'admin_service' and 'category' not in app.request.get('_route') ? 'active' : '' }} text-white" 
                    href="{{ path('admin_services') }}">
                     <i class="bi bi-scissors"></i> Services
                 </a>
+            {% endif %} 
             </li>
             <li class="nav-item">
+            {% if is_granted('ROLE_ADMIN') %}
                 <a class="nav-link {{ app.request.get('_route') starts with 'admin_service_categor' ? 'active' : '' }} text-white" 
                    href="{{ path('admin_service_categories') }}">
                     <i class="bi bi-bookmark"></i> Catégories de Services
                 </a>
+                {% endif %}
             </li>
             <li class="nav-item">
+            {% if is_granted('ROLE_ADMIN') %}
                 <a class="nav-link {{ app.request.get('_route') starts with 'admin_stock' ? 'active' : '' }} text-white" 
                    href="{{ path('admin_stock') }}">
                     <i class="bi bi-box-seam"></i> Gestion du Stock
                 </a>
+                {% endif %}
+            </li>
+            <li class="nav-item">
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="nav-link {{ app.request.get('_route') starts with 'admin_user' ? 'active' : '' }} text-white" 
+                   href="{{ path('admin_users') }}">
+                    <i class="bi bi-people"></i> Utilisateurs
+                </a>
+                {% endif %}
             </li>
             <li class="nav-item mt-3">
                 <a class="nav-link text-gold" href="{{ path('app_home') }}">

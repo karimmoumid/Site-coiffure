@@ -21,20 +21,20 @@ class DashboardController extends AbstractController
         $stats = [
             'today_appointments' => count(array_filter(
                 $appointmentRepo->findBy(['status' => 'confirmed']),
-                fn($a) => $a->getAppointmentDate() == $today
+                fn($a) => $a->getDateHour() == $today
             )),
             'pending_appointments' => count($appointmentRepo->findBy(['status' => 'pending'])),
             'upcoming_this_week' => count(array_filter(
                 $appointmentRepo->findBy(['status' => 'confirmed']),
-                fn($a) => $a->getAppointmentDate() >= $today && 
-                          $a->getAppointmentDate() <= (clone $today)->modify('+7 days')
+                fn($a) => $a->getDateHour() >= $today && 
+                          $a->getDateHour() <= (clone $today)->modify('+7 days')
             )),
         ];
         
         // Prochains rendez-vous
         $upcomingAppointments = array_filter(
-            $appointmentRepo->findBy(['status' => 'confirmed'], ['appointmentDate' => 'ASC', 'appointmentTime' => 'ASC']),
-            fn($a) => $a->getAppointmentDate() >= $today
+            $appointmentRepo->findBy(['status' => 'confirmed'], ['date_hour' => 'ASC']),
+            fn($a) => $a->getDateHour() >= $today
         );
         $upcomingAppointments = array_slice($upcomingAppointments, 0, 10);
         

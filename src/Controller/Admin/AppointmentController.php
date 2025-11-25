@@ -11,7 +11,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/appointments')]
+#[Route('/employee/appointments')]
 #[IsGranted('ROLE_EMPLOYEE')]
 class AppointmentController extends AbstractController
 {

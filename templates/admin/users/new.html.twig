@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel Utilisateur - Admin{% endblock %}
+
+{% block body %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Sidebar -->
+        {% include 'admin/components/sidebar.html.twig' %}
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-person-plus text-gold"></i> Nouvel Utilisateur
+                </h1>
+                <a href="{{ path('admin_users') }}" class="btn btn-black">
+                    <i class="bi bi-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card shadow">
+                        <div class="card-header bg-dark text-gold">
+                            <h5 class="mb-0">
+                                <i class="bi bi-person-fill-add"></i> Créer un nouveau compte
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            {{ form_start(form) }}
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-person"></i> {{ form_label(form.name) }} 
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form_widget(form.name) }}
+                                {{ form_errors(form.name) }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-envelope"></i> {{ form_label(form.email) }} 
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form_widget(form.email) }}
+                                {{ form_errors(form.email) }}
+                                <small class="form-text text-muted">
+                                    L'email sera utilisé pour la connexion
+                                </small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-lock"></i> {{ form_label(form.plainPassword) }} 
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form_widget(form.plainPassword) }}
+                                {{ form_errors(form.plainPassword) }}
+                                <small class="form-text text-muted">
+                                    Minimum 6 caractères
+                                </small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-shield"></i> {{ form_label(form.userType) }} 
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form_widget(form.userType) }}
+                                {{ form_help(form.userType) }}
+                                {{ form_errors(form.userType) }}
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> 
+                                <strong>Information importante :</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>Les <strong>administrateurs</strong> ont accès à toutes les fonctionnalités</li>
+                                    <li>Les <strong>employés</strong> peuvent gérer les rendez-vous et le stock</li>
+                                    <li>Les <strong>utilisateurs standard</strong> peuvent uniquement prendre des rendez-vous</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-gold btn-lg">
+                                    <i class="bi bi-check-circle"></i> Créer l'utilisateur
+                                </button>
+                                <a href="{{ path('admin_users') }}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Annuler
+                                </a>
+                            </div>
+                            
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .form-control:focus, .form-select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+    }
+    
+    .sidebar {
+        background-color: var(--black) !important;
+    }
+    
+    .sidebar .nav-link {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+    }
+    
+    .sidebar .nav-link.active {
+        background-color: var(--dark-gray);
+        border-left-color: var(--gold);
+        color: var(--gold) !important;
+    }
+</style>
+{% endblock %}

@@ -37,6 +37,13 @@
                             <i class="bi bi-box-seam"></i> Stock
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ app.request.get('_route') starts with 'admin_user' ? 'active' : '' }} text-white" 
+                        href="{{ path('admin_users') }}">
+                            <i class="bi bi-people"></i> Utilisateurs
+                        </a>
+                    </li>
+
                     <li class="nav-item mt-3">
                         <a class="nav-link text-gold" href="{{ path('app_home') }}">
                             <i class="bi bi-arrow-left-circle"></i> Retour au site

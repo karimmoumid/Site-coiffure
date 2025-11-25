@@ -121,13 +121,16 @@
                                         {% for appointment in pending_appointments %}
                                         <tr>
                                             <td>
-                                                <strong>{{ appointment.clientName }}</strong><br>
-                                                <small class="text-muted">{{ appointment.clientPhone }}</small>
+                                                <strong>{{ appointment.name }}</strong><br>
                                             </td>
-                                            <td>{{ appointment.service.name }}</td>
                                             <td>
-                                                <i class="bi bi-calendar"></i> {{ appointment.appointmentDate|date('d/m/Y') }}<br>
-                                                <i class="bi bi-clock"></i> {{ appointment.appointmentTime|date('H:i') }}
+                                                {% for service in appointment.services %}
+                                                    {{ service.name }}{% if not loop.last %}, {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                <i class="bi bi-calendar"></i> {{ appointment.dateHour|date('d/m/Y') }}<br>
+                                                <i class="bi bi-clock"></i> {{ appointment.dateHour|date('H:i') }}
                                             </td>
                                             <td>
                                                 <a href="{{ path('admin_appointment_confirm', {id: appointment.id}) }}" 
@@ -177,22 +180,31 @@
                                     </thead>
                                     <tbody>
                                         {% for appointment in upcoming_appointments %}
-                                        <tr {% if appointment.appointmentDate|date('Y-m-d') == 'now'|date('Y-m-d') %}class="table-primary"{% endif %}>
+                                        <tr {% if appointment.dateHour|date('Y-m-d') == 'now'|date('Y-m-d') %}class="table-primary"{% endif %}>
                                             <td>
                                                 <strong>
-                                                    <i class="bi bi-calendar"></i> {{ appointment.appointmentDate|date('d/m/Y') }}
+                                                    <i class="bi bi-calendar"></i> {{ appointment.dateHour|date('d/m/Y') }}
                                                 </strong><br>
-                                                <i class="bi bi-clock"></i> {{ appointment.appointmentTime|date('H:i') }}
+                                                <i class="bi bi-clock"></i> {{ appointment.dateHour|date('H:i') }}
                                             </td>
-                                            <td><strong>{{ appointment.clientName }}</strong></td>
+                                            <td><strong>{{ appointment.name }}</strong></td>
                                             <td>
                                                 <small>
-                                                    <i class="bi bi-telephone"></i> {{ appointment.clientPhone }}<br>
-                                                    <i class="bi bi-envelope"></i> {{ appointment.clientEmail }}
+                                                    <i class="bi bi-envelope"></i> {{ appointment.email }}
                                                 </small>
                                             </td>
-                                            <td>{{ appointment.service.name }}</td>
-                                            <td>{{ appointment.service.duration }} min</td>
+                                                                                        <td>
+                                                {% for service in appointment.services %}
+                                                    {{ service.name }}{% if not loop.last %}, {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                                                                        <td>
+                                                {% set totalTime = 0 %}
+                                                {% for service in appointment.services %}
+                                                    {% set totalTime = totalTime + service.time %}
+                                                {% endfor %}
+                                                {{ totalTime }} min
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
