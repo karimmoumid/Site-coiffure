@@ -1,0 +1,306 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de Confidentialité - Salon Sana{% endblock %}
+
+{% block body %}
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            Politique de <span class="text-gold">Confidentialité</span>
+        </h1>
+        <p class="lead">Protection de vos données personnelles</p>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <p class="text-muted mb-4">
+                        <i class="bi bi-calendar"></i> Dernière mise à jour : {{ 'now'|date('d/m/Y') }}
+                    </p>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-shield-check"></i> 1. Introduction
+                        </h2>
+                        <p>
+                            Le Salon Sana s'engage à protéger la confidentialité des données personnelles de ses clients et utilisateurs. 
+                            Cette politique de confidentialité explique comment nous collectons, utilisons, stockons et protégeons vos 
+                            informations personnelles conformément au Règlement Général sur la Protection des Données (RGPD).
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-person-fill"></i> 2. Responsable du traitement
+                        </h2>
+                        <div class="bg-light p-3 rounded">
+                            <p class="mb-2"><strong>Salon Sana</strong></p>
+                            <p class="mb-1">Amal 2, Agadir 80000, Maroc</p>
+                            <p class="mb-1">Téléphone : +212 6 41 86 96 78</p>
+                            <p class="mb-0">Email : moumidmounir@gmail.com</p>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-collection"></i> 3. Données collectées
+                        </h2>
+                        <p>Nous collectons les types de données suivants :</p>
+                        
+                        <h5 class="mt-4">3.1 Lors de la prise de rendez-vous :</h5>
+                        <ul>
+                            <li>Nom et prénom</li>
+                            <li>Adresse email</li>
+                            <li>Préférences de services</li>
+                            <li>Historique des rendez-vous</li>
+                            <li>Notes et demandes particulières</li>
+                        </ul>
+
+                        <h5 class="mt-4">3.2 Lors de la création d'un compte :</h5>
+                        <ul>
+                            <li>Informations d'identification (nom, email)</li>
+                            <li>Mot de passe (crypté)</li>
+                            <li>Date de création du compte</li>
+                        </ul>
+
+                        <h5 class="mt-4">3.3 Navigation sur le site :</h5>
+                        <ul>
+                            <li>Adresse IP</li>
+                            <li>Type de navigateur</li>
+                            <li>Pages visitées</li>
+                            <li>Durée de visite</li>
+                            <li>Cookies (voir notre politique de cookies)</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-bullseye"></i> 4. Finalités du traitement
+                        </h2>
+                        <p>Vos données personnelles sont utilisées pour :</p>
+                        <ul>
+                            <li><strong>Gestion des rendez-vous :</strong> Planification, confirmation et rappels</li>
+                            <li><strong>Communication :</strong> Réponse à vos demandes et envoi d'informations importantes</li>
+                            <li><strong>Amélioration des services :</strong> Analyse des préférences pour personnaliser notre offre</li>
+                            <li><strong>Obligations légales :</strong> Respect des obligations comptables et fiscales</li>
+                            <li><strong>Sécurité :</strong> Prévention de la fraude et sécurisation du site</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-check2-circle"></i> 5. Base légale du traitement
+                        </h2>
+                        <p>Le traitement de vos données repose sur :</p>
+                        <ul>
+                            <li><strong>L'exécution du contrat :</strong> Pour la gestion de vos rendez-vous</li>
+                            <li><strong>Nos intérêts légitimes :</strong> Pour améliorer nos services et assurer la sécurité</li>
+                            <li><strong>Obligations légales :</strong> Pour respecter nos obligations comptables</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-clock-history"></i> 6. Durée de conservation
+                        </h2>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Type de données</th>
+                                        <th>Durée de conservation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Données de compte client</td>
+                                        <td>3 ans après la dernière activité</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Historique des rendez-vous</td>
+                                        <td>5 ans pour des raisons comptables</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Données de prospection</td>
+                                        <td>3 ans après le dernier contact</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cookies</td>
+                                        <td>13 mois maximum</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Logs de sécurité</td>
+                                        <td>1 an</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-share"></i> 7. Partage des données
+                        </h2>
+                        <p>Vos données peuvent être partagées avec :</p>
+                        <ul>
+                            <li><strong>Notre personnel :</strong> Uniquement les employés ayant besoin d'y accéder</li>
+                            <li><strong>Prestataires de services :</strong> Hébergeur web, service d'email, outils de réservation</li>
+                            <li><strong>Autorités légales :</strong> Si requis par la loi</li>
+                        </ul>
+                        <div class="alert alert-info mt-3">
+                            <i class="bi bi-info-circle"></i> Nous ne vendons jamais vos données personnelles à des tiers.
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-lock-fill"></i> 8. Sécurité des données
+                        </h2>
+                        <p>Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles pour protéger vos données :</p>
+                        <ul>
+                            <li>Chiffrement SSL/TLS pour toutes les transmissions</li>
+                            <li>Mots de passe cryptés et sécurisés</li>
+                            <li>Accès restreint aux données personnelles</li>
+                            <li>Sauvegardes régulières et sécurisées</li>
+                            <li>Formation du personnel sur la protection des données</li>
+                            <li>Tests de sécurité réguliers</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-person-check"></i> 9. Vos droits
+                        </h2>
+                        <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+                        
+                        <div class="row g-3 mt-3">
+                            <div class="col-md-6">
+                                <div class="card h-100 border-gold">
+                                    <div class="card-body">
+                                        <h5 class="text-gold">Droit d'accès</h5>
+                                        <p>Obtenir une copie de vos données personnelles</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-gold">
+                                    <div class="card-body">
+                                        <h5 class="text-gold">Droit de rectification</h5>
+                                        <p>Corriger vos données inexactes ou incomplètes</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-gold">
+                                    <div class="card-body">
+                                        <h5 class="text-gold">Droit à l'effacement</h5>
+                                        <p>Demander la suppression de vos données</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-gold">
+                                    <div class="card-body">
+                                        <h5 class="text-gold">Droit à la portabilité</h5>
+                                        <p>Recevoir vos données dans un format structuré</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-gold">
+                                    <div class="card-body">
+                                        <h5 class="text-gold">Droit d'opposition</h5>
+                                        <p>S'opposer au traitement de vos données</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-gold">
+                                    <div class="card-body">
+                                        <h5 class="text-gold">Droit de limitation</h5>
+                                        <p>Limiter le traitement de vos données</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="mt-4">
+                            Pour exercer ces droits, contactez-nous à : <strong>moumidmounir@gmail.com</strong> ou par courrier à notre adresse postale.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-cookie"></i> 10. Cookies
+                        </h2>
+                        <p>Notre site utilise des cookies pour :</p>
+                        <ul>
+                            <li><strong>Cookies essentiels :</strong> Nécessaires au fonctionnement du site</li>
+                            <li><strong>Cookies de performance :</strong> Analyser l'utilisation du site</li>
+                            <li><strong>Cookies de fonctionnalité :</strong> Mémoriser vos préférences</li>
+                        </ul>
+                        <p>Vous pouvez gérer vos préférences de cookies dans les paramètres de votre navigateur.</p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-person-x"></i> 11. Mineurs
+                        </h2>
+                        <p>
+                            Notre site n'est pas destiné aux personnes de moins de 16 ans. Nous ne collectons pas 
+                            sciemment de données personnelles de mineurs sans le consentement parental.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-arrow-repeat"></i> 12. Modifications
+                        </h2>
+                        <p>
+                            Nous pouvons mettre à jour cette politique de confidentialité périodiquement. 
+                            Les modifications seront publiées sur cette page avec la date de mise à jour.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-envelope"></i> 13. Contact et réclamation
+                        </h2>
+                        <p>Pour toute question concernant cette politique ou vos données personnelles :</p>
+                        <div class="bg-light p-4 rounded mb-3">
+                            <p class="mb-2"><strong>Délégué à la Protection des Données (DPO)</strong></p>
+                            <p class="mb-1">Email : moumidmounir@gmail.com</p>
+                            <p class="mb-1">Téléphone : +212 6 41 86 96 78</p>
+                            <p class="mb-0">Adresse : Amal 2, Agadir 80000, Maroc</p>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="bi bi-info-circle"></i> 
+                            Si vous n'êtes pas satisfait de notre réponse, vous pouvez déposer une réclamation 
+                            auprès de la <strong>CNIL</strong> (Commission Nationale de l'Informatique et des Libertés) :
+                            <a href="https://www.cnil.fr" target="_blank" class="text-gold">www.cnil.fr</a>
+                        </div>
+                    </section>
+
+                    <div class="text-center mt-5 p-4 bg-dark text-white rounded">
+                        <p class="mb-2">
+                            <i class="bi bi-shield-check text-gold"></i> 
+                            Nous nous engageons à protéger vos données personnelles
+                        </p>
+                        <small>Cette politique entre en vigueur le {{ 'now'|date('d/m/Y') }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-gold {
+        border-color: var(--gold) !important;
+    }
+</style>
+{% endblock %}

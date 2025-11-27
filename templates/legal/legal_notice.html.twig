@@ -1,0 +1,217 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions Légales - Salon Sana{% endblock %}
+
+{% block body %}
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            Mentions <span class="text-gold">Légales</span>
+        </h1>
+        <p class="lead">Informations légales et réglementaires</p>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-building"></i> 1. Éditeur du site
+                        </h2>
+                        <div class="bg-light p-4 rounded">
+                            <p class="mb-2"><strong>Raison sociale :</strong> Salon Sana</p>
+                            <p class="mb-2"><strong>Siège social :</strong> Amal 2, Agadir 80000, Maroc</p>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-person-badge"></i> 2. Directeur de publication
+                        </h2>
+                        <div class="bg-light p-4 rounded">
+                            <p class="mb-2"><strong>Nom :</strong> MOUMID Mouir</p>
+                            <p class="mb-2"><strong>Qualité :</strong> Gérant</p>
+                            <p class="mb-0"><strong>Email :</strong> moumidmounir@gmail.com</p>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-telephone"></i> 3. Contact
+                        </h2>
+                        <div class="bg-light p-4 rounded">
+                            <p class="mb-2"><strong>Téléphone :</strong> +212 6 41 86 96 78</p>
+                            <p class="mb-2"><strong>Email :</strong> moumidmounir@gmail.com</p>
+                            <p class="mb-2"><strong>Site web :</strong> www.salonsana.com</p>
+                            <p class="mb-0"><strong>Horaires :</strong> Mardi-Dimanche : 11h-00h</p>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-server"></i> 4. Hébergement
+                        </h2>
+                        <div class="bg-light p-4 rounded">
+                            <p class="mb-2"><strong>Hébergeur :</strong> o2switch</p>
+                            <p class="mb-2"><strong>Adresse :</strong> 222-224 Boulevard Gustave Flaubert 63000 Clermont-Ferrand - France</p>
+                            <p class="mb-2"></p>
+                            <p class="mb-0"><strong>Site web :</strong> https://clients.o2switch.fr/</p>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-code-slash"></i> 5. Conception et réalisation
+                        </h2>
+                        <div class="bg-light p-4 rounded">
+                            <p class="mb-2"><strong>Développement :</strong> MOUMID Karim</p>
+                            <p class="mb-2"><strong>Design :</strong> MOUMID Karim</p>
+                            <p class="mb-0"><strong>Maintenance :</strong> MOUMID Karim</p>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-briefcase"></i> 6. Activité professionnelle
+                        </h2>
+                        <div class="bg-light p-4 rounded">
+                            <p class="mb-2"><strong>Activité :</strong> Salon de coiffure et services de beauté</p>
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-shield-check"></i> 7. Protection des données
+                        </h2>
+                        <p>
+                            Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi 
+                            « Informatique et Libertés » du 6 janvier 1978 modifiée, vous disposez d'un droit 
+                            d'accès, de rectification, de suppression et de portabilité de vos données personnelles.
+                        </p>
+                        <p>
+                            Pour exercer ces droits ou pour toute question sur le traitement de vos données, 
+                            vous pouvez nous contacter à : <strong>moumidmounir@gmail.com</strong>
+                        </p>
+                        <p>
+                            <a href="{{ path('app_privacy_policy') }}" class="btn btn-gold">
+                                <i class="bi bi-shield"></i> Consulter notre politique de confidentialité
+                            </a>
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-copyright"></i> 8. Propriété intellectuelle
+                        </h2>
+                        <p>
+                            L'ensemble du contenu de ce site (textes, images, vidéos, logos, marques, etc.) 
+                            est la propriété exclusive de Salon Sana ou de ses partenaires et est protégé 
+                            par les lois françaises et internationales relatives à la propriété intellectuelle.
+                        </p>
+                        <p>
+                            Toute reproduction, représentation, modification, publication, adaptation de tout 
+                            ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, 
+                            est interdite sans autorisation écrite préalable de Salon Sana.
+                        </p>
+                        <div class="alert alert-warning mt-3">
+                            <i class="bi bi-exclamation-triangle"></i> 
+                            Toute exploitation non autorisée du site ou de ses éléments sera considérée 
+                            comme constitutive d'une contrefaçon et poursuivie conformément aux dispositions 
+                            des articles L.335-2 et suivants du Code de Propriété Intellectuelle.
+                        </div>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-link-45deg"></i> 9. Liens hypertextes
+                        </h2>
+                        <h5>Liens sortants</h5>
+                        <p>
+                            Le site peut contenir des liens vers d'autres sites web. Salon Sana n'exerce 
+                            aucun contrôle sur ces sites et décline toute responsabilité quant à leur 
+                            contenu ou leur fonctionnement.
+                        </p>
+                        
+                        <h5 class="mt-4">Liens entrants</h5>
+                        <p>
+                            La mise en place de liens hypertextes vers notre site est soumise à autorisation 
+                            préalable. Pour toute demande, contactez-nous à : moumidmounir@gmail.com
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-exclamation-circle"></i> 10. Responsabilité
+                        </h2>
+                        <p>
+                            Les informations contenues sur ce site sont aussi précises que possible et 
+                            sont sujettes à modifications sans préavis. Salon Sana ne peut être tenu 
+                            responsable de :
+                        </p>
+                        <ul>
+                            <li>L'exactitude, la complétude et l'actualité des informations diffusées</li>
+                            <li>Tout dommage direct ou indirect résultant de l'utilisation du site</li>
+                            <li>L'interruption ou l'indisponibilité du site</li>
+                            <li>L'utilisation frauduleuse par des tiers de vos informations</li>
+                            <li>Les contaminations par virus de votre équipement informatique</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-cookie"></i> 11. Cookies
+                        </h2>
+                        <p>
+                            Ce site utilise des cookies pour améliorer l'expérience utilisateur, analyser 
+                            le trafic et personnaliser le contenu. En continuant à naviguer sur ce site, 
+                            vous acceptez l'utilisation de cookies conformément à notre politique.
+                        </p>
+                        <p>
+                            Vous pouvez paramétrer votre navigateur pour refuser les cookies ou être 
+                            alerté lorsqu'un cookie est envoyé.
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-file-text"></i> 12. Conditions générales de vente
+                        </h2>
+                        <p>
+                            Les prestations de services proposées par Salon Sana sont soumises aux 
+                            conditions générales de vente disponibles en salon et sur demande.
+                        </p>
+                        <p>
+                            <a href="{{ path('app_terms_of_service') }}" class="btn btn-gold">
+                                <i class="bi bi-file-text"></i> Consulter nos CGV
+                            </a>
+                        </p>
+                    </section>
+
+                    <section class="mb-5">
+                        <h2 class="text-gold mb-3">
+                            <i class="bi bi-balance-scale"></i> 13. Droit applicable et juridiction
+                        </h2>
+                        <p>
+                            Les présentes mentions légales sont régies par le droit français. En cas de 
+                            litige et après échec de toute tentative de résolution amiable, les tribunaux 
+                            français seront seuls compétents.
+                        </p>
+                    </section>
+
+                    <div class="text-center mt-5 p-4 bg-dark text-white rounded">
+                        <p class="mb-2">
+                            <i class="bi bi-info-circle text-gold"></i> 
+                            Ces mentions légales ont été mises à jour le {{ 'now'|date('d/m/Y') }}
+                        </p>
+                        <small>© {{ 'now'|date('Y') }} Salon Sana - Tous droits réservés</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

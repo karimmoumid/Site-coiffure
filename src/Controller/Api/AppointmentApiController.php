@@ -117,10 +117,10 @@ class AppointmentApiController extends AbstractController
         
         // Heures d'ouverture du salon (9h - 19h)
         $openingTime = clone $date;
-        $openingTime->setTime(9, 0);
+        $openingTime->setTime(11, 0);
         
         $closingTime = clone $date;
-        $closingTime->setTime(19, 0);
+        $closingTime->setTime(23, 59);
         
         // Pas de 30 minutes pour les créneaux
         $interval = new \DateInterval('PT30M');
