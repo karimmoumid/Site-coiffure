@@ -155,7 +155,7 @@ class AppointmentController extends AbstractController
             // Email à l'administrateur
             $adminEmail = (new Email())
                 ->from('noreply@salonluxe.fr')
-                ->to('admin@salonluxe.fr')
+                ->to('moumidmounir@gmail.com')
                 ->subject('Nouvelle demande de rendez-vous')
                 ->html($this->renderView('emails/appointment_admin.html.twig', [
                     'appointment' => $appointment,
