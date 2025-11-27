@@ -49,8 +49,8 @@ class ContactController extends AbstractController
             if (empty($errors)) {
                 try {
                     $emailMessage = (new Email())
-                        ->from($email)
-                        ->to('contact@salonluxe.fr')
+                        ->from('noreply@salonsana.com')
+                        ->to('moumidmounir@gmail.com')
                         ->subject('Contact : ' . $subject)
                         ->html("
                             <h3>Nouveau message de contact</h3>

@@ -141,9 +141,9 @@ class AppointmentController extends AbstractController
         try {
             // Email au client
             $clientEmail = (new Email())
-                ->from('noreply@salonluxe.fr')
+                ->from('noreply@salonsana.com')
                 ->to($appointment->getEmail())
-                ->subject('Confirmation de votre demande de rendez-vous - Salon Luxe')
+                ->subject('Confirmation de votre demande de rendez-vous - Salon Sana')
                 ->html($this->renderView('emails/appointment_client.html.twig', [
                     'appointment' => $appointment,
                     'services' => $serviceNames,
@@ -154,7 +154,7 @@ class AppointmentController extends AbstractController
             
             // Email à l'administrateur
             $adminEmail = (new Email())
-                ->from('noreply@salonluxe.fr')
+                ->from('noreply@salonsana.com')
                 ->to('moumidmounir@gmail.com')
                 ->subject('Nouvelle demande de rendez-vous')
                 ->html($this->renderView('emails/appointment_admin.html.twig', [
